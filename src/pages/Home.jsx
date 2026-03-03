@@ -3,6 +3,7 @@ import HeroBanner from '../components/HeroBanner'
 import ShowsPanel from '../components/ShowsPanel'
 import SpotifyEmbed from '../components/SpotifyEmbed'
 import SocialLinks from '../components/SocialLinks'
+import NextShowTicker from '../components/NextShowTicker'
 
 export default function Home() {
   const [openPanel, setOpenPanel] = useState(null)
@@ -58,8 +59,13 @@ export default function Home() {
       <div className={`h-full w-full relative transition-transform duration-300 ease-in-out ${shift}`}>
         <HeroBanner />
 
+        {/* Next show ticker */}
+        <div className="absolute top-0 left-0 right-0 z-20">
+          <NextShowTicker />
+        </div>
+
         {/* Logo */}
-        <div className="absolute top-4 left-4 z-50 bg-bg border border-white/20 px-6 py-4">
+        <div className="absolute top-12 left-4 z-50 bg-bg border border-white/20 px-6 py-4">
           <span className="font-display text-5xl tracking-[0.3em] text-text">ARAUJIA</span>
         </div>
 

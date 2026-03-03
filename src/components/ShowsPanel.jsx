@@ -51,7 +51,7 @@ export default function ShowsPanel() {
               <img
                 src={show.poster_url}
                 alt={show.gig_name}
-                className="w-42 shrink-0 object-contain self-start"
+                className="w-42 shrink-0 object-contain self-center"
               />
             )}
             <div className="flex flex-col justify-between min-w-0 py-1">

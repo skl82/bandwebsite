@@ -40,19 +40,24 @@ export default function Home() {
     return () => window.removeEventListener('keydown', onKeyDown)
   }, [logoUnlocked])
 
-  function onLogoDoubleClick() {
-    if (!logoUnlocked && window.innerWidth >= 1024) {
-      hasAnimated.current = true
-      setLogoUnlocked(true)
-    }
-  }
+  const lastClickTime = useRef(0)
 
   function onLogoPointerDown(e) {
-    if (!logoUnlocked) return
+    if (window.innerWidth < 1024) return
+    const now = Date.now()
+    const isDoubleClick = now - lastClickTime.current < 400
+    lastClickTime.current = now
+
+    if (!isDoubleClick) return
+
+    // Double-click-and-hold: unlock + start dragging immediately
     e.preventDefault()
+    hasAnimated.current = true
+    setLogoUnlocked(true)
     draggingRef.current = true
     setGrabbed(true)
-    dragStart.current = { x: e.clientX - offsetRef.current.x, y: e.clientY - offsetRef.current.y }
+    offsetRef.current = { x: 0, y: 0 }
+    dragStart.current = { x: e.clientX, y: e.clientY }
 
     function onMove(ev) {
       if (!draggingRef.current) return
@@ -86,8 +91,7 @@ export default function Home() {
           return
         }
       }
-      offsetRef.current = { x: 0, y: 0 }
-      setDragOffset({ x: 0, y: 0 })
+      resetLogo()
     }
 
     window.addEventListener('pointermove', onMove)
@@ -147,7 +151,6 @@ export default function Home() {
           {/* Logo — draggable when unlocked */}
           <div
             ref={logoRef}
-            onDoubleClick={onLogoDoubleClick}
             onPointerDown={onLogoPointerDown}
             className={`absolute top-24 lg:top-12 left-4 z-[51] select-none ${
               logoUnlocked ? 'cursor-grab active:cursor-grabbing' : (hasAnimated.current ? '' : 'fade-in fade-in-delay-2')

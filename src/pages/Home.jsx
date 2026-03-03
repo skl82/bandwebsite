@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '../supabase'
 import HeroBanner from '../components/HeroBanner'
+import SocialLinks from '../components/SocialLinks'
 import SpotifyEmbed from '../components/SpotifyEmbed'
 import TicketButton from '../components/TicketButton'
 
@@ -25,7 +26,12 @@ export default function Home() {
     <div className="pb-16">
       <HeroBanner show={nextShow} />
 
-      <section className="max-w-4xl mx-auto px-4 py-20">
+      <section className="max-w-5xl mx-auto px-4 py-14">
+        <h2 className="font-display text-4xl tracking-wide mb-6">FIND US</h2>
+        <SocialLinks />
+      </section>
+
+      <section className="max-w-4xl mx-auto px-4 py-14">
         <h2 className="font-display text-4xl tracking-wide mb-6">ABOUT</h2>
         <p className="text-text-muted leading-relaxed max-w-2xl">
           araujia is a band. This is placeholder bio text that should be replaced with the

@@ -8,7 +8,7 @@ export default function App() {
 
   return (
     <div className={`min-h-screen flex flex-col bg-bg text-text ${isHome ? 'h-screen overflow-hidden' : ''}`}>
-      <Navbar />
+      {!isHome && <Navbar />}
       <main className="flex-1">
         <Outlet />
       </main>

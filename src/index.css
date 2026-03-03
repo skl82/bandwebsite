@@ -43,3 +43,13 @@ body {
 .animate-ticker {
   animation: ticker 30s linear infinite;
 }
+
+.writing-vertical {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+}
+
+.writing-vertical-right {
+  writing-mode: vertical-lr;
+  transform: rotate(180deg);
+}

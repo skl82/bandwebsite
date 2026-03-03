@@ -122,7 +122,7 @@ export default function SocialLinks() {
                   {name}
                 </span>
               </span>
-              <span className="text-white/20">&mdash;</span>
+              <span className="text-white/20">//</span>
             </a>
           ))}
         </div>

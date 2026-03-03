@@ -1,3 +1,5 @@
+import { useRef, useEffect } from 'react'
+
 const platforms = [
   {
     name: 'Spotify',
@@ -61,9 +63,40 @@ const platforms = [
   },
 ]
 
+const SPEED = 50 // pixels per second
+
 export default function SocialLinks() {
-  // Triple the list for truly seamless looping
-  const items = [...platforms, ...platforms, ...platforms]
+  const trackRef = useRef(null)
+  const offsetRef = useRef(0)
+  const rafRef = useRef(null)
+  const lastRef = useRef(null)
+
+  useEffect(() => {
+    const track = trackRef.current
+    if (!track) return
+
+    function tick(now) {
+      if (lastRef.current === null) lastRef.current = now
+      const dt = (now - lastRef.current) / 1000
+      lastRef.current = now
+
+      offsetRef.current -= SPEED * dt
+
+      // Reset after scrolling one copy's worth (1/4 of total since we render 4 copies)
+      const copyWidth = track.scrollWidth / 4
+      if (Math.abs(offsetRef.current) >= copyWidth) {
+        offsetRef.current += copyWidth
+      }
+
+      track.style.transform = `translate3d(${offsetRef.current}px, 0, 0)`
+      rafRef.current = requestAnimationFrame(tick)
+    }
+
+    rafRef.current = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(rafRef.current)
+  }, [])
+
+  const items = [...platforms, ...platforms, ...platforms, ...platforms]
 
   return (
     <div>
@@ -71,27 +104,27 @@ export default function SocialLinks() {
         <span className="font-mono text-xs text-text-muted tracking-widest lowercase bg-bg border border-white/10 border-b-0 px-4 py-1">// find us on:</span>
       </div>
       <div className="relative overflow-hidden border-t border-white/10 bg-bg carousel-glitch-wrap">
-        <div className="flex animate-ticker whitespace-nowrap">
-        {items.map(({ name, href, color, icon }, i) => (
-          <a
-            key={`${name}-${i}`}
-            href={href}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group inline-flex items-center font-mono text-sm tracking-widest uppercase text-text-muted transition-colors py-3"
-            style={{ '--platform-color': color }}
-          >
-            <span className="px-6 inline-flex items-center gap-2.5">
-              <span className="group-hover:text-[var(--platform-color)] transition-colors duration-200">
-                {icon}
+        <div ref={trackRef} className="flex whitespace-nowrap will-change-transform">
+          {items.map(({ name, href, color, icon }, i) => (
+            <a
+              key={`${name}-${i}`}
+              href={href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group inline-flex items-center font-mono text-sm tracking-widest uppercase text-text-muted transition-colors py-3"
+              style={{ '--platform-color': color }}
+            >
+              <span className="px-6 inline-flex items-center gap-2.5">
+                <span className="group-hover:text-[var(--platform-color)] transition-colors duration-200">
+                  {icon}
+                </span>
+                <span className="group-hover:text-text transition-colors duration-200">
+                  {name}
+                </span>
               </span>
-              <span className="group-hover:text-text transition-colors duration-200">
-                {name}
-              </span>
-            </span>
-            <span className="text-white/20">&mdash;</span>
-          </a>
-        ))}
+              <span className="text-white/20">&mdash;</span>
+            </a>
+          ))}
         </div>
       </div>
     </div>

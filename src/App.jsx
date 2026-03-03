@@ -1,4 +1,5 @@
 import { Outlet, useLocation } from 'react-router-dom'
+import { Analytics } from '@vercel/analytics/react'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import NextShowBanner from './components/NextShowBanner'
@@ -14,6 +15,7 @@ export default function App() {
       </main>
       {!isHome && <Footer />}
       {!isHome && <NextShowBanner />}
+      <Analytics />
     </div>
   )
 }

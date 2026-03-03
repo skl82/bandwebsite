@@ -35,27 +35,47 @@ export default function ShowsPanel() {
             })
           : null
 
+        // Build Google Calendar URL
+        const dateClean = show.date.replace(/-/g, '')
+        const startDate = show.time
+          ? `${dateClean}T${show.time.replace(/:/g, '')}00`
+          : dateClean
+        const endDate = show.time
+          ? `${dateClean}T${String(Number(show.time.split(':')[0]) + 2).padStart(2, '0')}${show.time.split(':')[1]}00`
+          : dateClean
+        const gcalUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(show.gig_name)}&dates=${startDate}/${endDate}&location=${encodeURIComponent(`${show.venue}, ${show.city}`)}&details=${encodeURIComponent(`Araujia live at ${show.venue}${show.ticket_link ? `\nTickets: ${show.ticket_link}` : ''}`)}`
+
         return (
-          <div key={show.id} className="border-b border-white/10 pb-5 last:border-0">
+          <div key={show.id} className="flex items-stretch gap-4 border-b border-white/10 pb-5 last:border-0">
             {show.poster_url && (
               <img
                 src={show.poster_url}
                 alt={show.gig_name}
-                className="w-full mb-3 object-cover max-h-40"
+                className="w-42 shrink-0 object-contain self-start"
               />
             )}
-            <h3 className="font-display text-2xl tracking-wide">{show.gig_name}</h3>
-            <p className="font-mono text-text-muted text-xs mt-2 tracking-wide">
-              {formatted}{time && ` // ${time}`}
-            </p>
-            <p className="font-mono text-text-muted text-xs tracking-wide">
-              {show.venue} &mdash; {show.city}
-            </p>
-            {show.ticket_link && (
-              <div className="mt-3">
-                <TicketButton href={show.ticket_link} />
-              </div>
-            )}
+            <div className="flex flex-col justify-between min-w-0 py-1">
+              <h3 className="font-display text-2xl tracking-wide">{show.gig_name}</h3>
+              <p className="font-mono text-text-muted text-xs mt-2 tracking-wide">
+                {formatted}{time && ` // ${time}`}
+              </p>
+              <p className="font-mono text-text-muted text-xs tracking-wide">
+                {show.venue} &mdash; {show.city}
+              </p>
+              {show.ticket_link && (
+                <div className="mt-3">
+                  <TicketButton href={show.ticket_link} size="lg" />
+                </div>
+              )}
+              <a
+                href={gcalUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-mono text-xs text-text-muted hover:text-text underline underline-offset-4 transition-colors mt-2"
+              >
+                [ Add to Google Calendar ]
+              </a>
+            </div>
           </div>
         )
       })}

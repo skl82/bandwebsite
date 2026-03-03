@@ -1,4 +1,4 @@
-export default function SpotifyEmbed({ uri = 'artist/placeholder', height = 352 }) {
+export default function SpotifyEmbed({ uri = 'album/17uvr925n9F4KgUBsHJIhj', height = 352 }) {
   // Replace the default URI with the actual Spotify artist/album/track URI
   // Format: artist/ARTIST_ID, album/ALBUM_ID, or track/TRACK_ID
   return (

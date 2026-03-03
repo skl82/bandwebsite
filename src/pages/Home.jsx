@@ -10,7 +10,7 @@ export default function Home() {
       <ShowsPanel />
 
       {/* Spotify player — bottom left, above the carousel */}
-      <div className="absolute bottom-16 left-4 z-30 w-80 bg-bg/90 backdrop-blur-md rounded-lg px-4 py-4">
+      <div className="absolute bottom-16 left-4 z-30 w-80 bg-bg/60 backdrop-blur-md rounded-lg px-4 py-4">
         <h2 className="font-display text-2xl tracking-wide mb-3">MUSIC</h2>
         <SpotifyEmbed height={352} />
       </div>

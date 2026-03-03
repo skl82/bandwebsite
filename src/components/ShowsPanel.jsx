@@ -17,7 +17,7 @@ export default function ShowsPanel() {
   }, [])
 
   return (
-    <div className="fixed top-4 right-4 bottom-16 z-40 w-[28rem] bg-bg/90 backdrop-blur-md rounded-lg overflow-y-auto">
+    <div className="fixed top-4 right-4 bottom-16 z-40 w-[28rem] bg-bg/60 backdrop-blur-md rounded-lg overflow-y-auto">
       <div className="px-6 py-5">
         <h2 className="font-display text-3xl tracking-wide mb-6">SHOWS</h2>
 

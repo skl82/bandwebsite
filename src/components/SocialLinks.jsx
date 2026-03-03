@@ -68,9 +68,9 @@ export default function SocialLinks() {
   return (
     <div>
       <div className="flex justify-center mb-1">
-        <span className="font-mono text-xs text-text-muted tracking-widest lowercase bg-bg/60 backdrop-blur-sm border border-white/10 border-b-0 px-4 py-1">// find us on:</span>
+        <span className="font-mono text-xs text-text-muted tracking-widest lowercase bg-bg border border-white/10 border-b-0 px-4 py-1">// find us on:</span>
       </div>
-      <div className="relative overflow-hidden border-t border-white/10 bg-bg/60 backdrop-blur-sm carousel-glitch-wrap">
+      <div className="relative overflow-hidden border-t border-white/10 bg-bg carousel-glitch-wrap">
         <div className="flex animate-ticker whitespace-nowrap">
         {items.map(({ name, href, color, icon }, i) => (
           <a

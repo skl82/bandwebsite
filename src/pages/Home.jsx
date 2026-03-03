@@ -66,17 +66,17 @@ export default function Home() {
         {/* Side tab: MUSIC (left) */}
         <button
           onClick={() => toggle('music')}
-          className="absolute left-0 top-1/2 -translate-y-1/2 z-50 bg-bg border border-white/20 border-l-0 pl-0 pr-5 py-5 font-display text-8xl tracking-tight writing-vertical cursor-pointer hover:bg-surface transition-colors leading-none"
+          className="absolute left-0 top-1/2 -translate-y-1/2 z-50 bg-bg pl-0 pr-5 py-5 font-mono text-8xl tracking-tight writing-vertical cursor-pointer hover:bg-surface transition-colors leading-none"
         >
-          {'\u00A0\u00A0'}MUSIC{'\u00A0\u00A0'}
+          {'\u00A0'}MUSIC{'\u00A0'}
         </button>
 
         {/* Side tab: SHOWS (right) */}
         <button
           onClick={() => toggle('shows')}
-          className="absolute right-0 top-1/2 -translate-y-1/2 z-50 bg-bg border border-white/20 border-r-0 pl-0 pr-5 py-5 font-display text-8xl tracking-tight writing-vertical-right cursor-pointer hover:bg-surface transition-colors leading-none"
+          className="absolute right-0 top-1/2 -translate-y-1/2 z-50 bg-bg pl-0 pr-5 py-5 font-mono text-8xl tracking-tight writing-vertical-right cursor-pointer hover:bg-surface transition-colors leading-none"
         >
-          {'\u00A0\u00A0'}SHOWS{'\u00A0\u00A0'}
+          {'\u00A0'}TICKETS{'\u00A0'}
         </button>
 
         {/* Social links carousel */}

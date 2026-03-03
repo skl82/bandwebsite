@@ -1,8 +1,12 @@
+const heroImages = ['/hero.jpg', '/hero2.jpg']
+
+const randomHero = heroImages[Math.floor(Math.random() * heroImages.length)]
+
 export default function HeroBanner() {
   return (
     <div className="absolute inset-0">
       <img
-        src="/hero.jpg"
+        src={randomHero}
         alt="araujia live"
         className="w-full h-full object-cover"
       />

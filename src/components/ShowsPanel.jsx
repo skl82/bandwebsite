@@ -17,11 +17,11 @@ export default function ShowsPanel() {
   }, [])
 
   if (shows.length === 0) {
-    return <p className="text-text-muted text-sm">No upcoming shows. Check back soon.</p>
+    return <p className="font-mono text-text-muted text-sm">// no upcoming shows</p>
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-5">
       {shows.map(show => {
         const formatted = new Date(show.date + 'T00:00:00').toLocaleDateString('en-US', {
           weekday: 'short',
@@ -36,20 +36,20 @@ export default function ShowsPanel() {
           : null
 
         return (
-          <div key={show.id} className="border-b border-white/10 pb-4 last:border-0">
+          <div key={show.id} className="border-b border-white/10 pb-5 last:border-0">
             {show.poster_url && (
               <img
                 src={show.poster_url}
                 alt={show.gig_name}
-                className="w-full rounded-md mb-3 object-cover max-h-40"
+                className="w-full mb-3 object-cover max-h-40"
               />
             )}
-            <h3 className="font-display text-xl tracking-wide">{show.gig_name}</h3>
-            <p className="text-text-muted text-sm mt-1">
-              {formatted}{time && ` · ${time}`}
+            <h3 className="font-display text-2xl tracking-wide">{show.gig_name}</h3>
+            <p className="font-mono text-text-muted text-xs mt-2 tracking-wide">
+              {formatted}{time && ` // ${time}`}
             </p>
-            <p className="text-text-muted text-sm">
-              {show.venue}, {show.city}
+            <p className="font-mono text-text-muted text-xs tracking-wide">
+              {show.venue} &mdash; {show.city}
             </p>
             {show.ticket_link && (
               <div className="mt-3">

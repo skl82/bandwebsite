@@ -24,12 +24,12 @@ export default function Home() {
       }`}>
         <div className="h-full overflow-y-auto px-6 py-8">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="font-display text-3xl tracking-wide">MUSIC</h2>
+            <h2 className="font-mono text-xl tracking-widest uppercase">// Music</h2>
             <button
               onClick={() => setOpenPanel(null)}
-              className="text-text-muted hover:text-text text-2xl leading-none cursor-pointer"
+              className="font-mono text-text-muted hover:text-text text-sm leading-none cursor-pointer"
             >
-              &times;
+              [close]
             </button>
           </div>
           <SpotifyEmbed height={352} />
@@ -42,12 +42,12 @@ export default function Home() {
       }`}>
         <div className="h-full overflow-y-auto px-6 py-8">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="font-display text-3xl tracking-wide">SHOWS</h2>
+            <h2 className="font-mono text-xl tracking-widest uppercase">// Shows</h2>
             <button
               onClick={() => setOpenPanel(null)}
-              className="text-text-muted hover:text-text text-2xl leading-none cursor-pointer"
+              className="font-mono text-text-muted hover:text-text text-sm leading-none cursor-pointer"
             >
-              &times;
+              [close]
             </button>
           </div>
           <ShowsPanel />
@@ -59,14 +59,14 @@ export default function Home() {
         <HeroBanner />
 
         {/* Logo */}
-        <div className="absolute top-4 left-4 z-50 bg-bg/60 backdrop-blur-md rounded-lg px-6 py-5">
-          <span className="font-display text-5xl tracking-wider text-text">ARAUJIA</span>
+        <div className="absolute top-4 left-4 z-50 bg-bg border border-white/20 px-6 py-4">
+          <span className="font-display text-5xl tracking-[0.3em] text-text">ARAUJIA</span>
         </div>
 
         {/* Side tab: MUSIC (left) */}
         <button
           onClick={() => toggle('music')}
-          className="absolute left-0 top-1/2 -translate-y-1/2 z-50 bg-bg pl-0 pr-5 py-5 rounded-r-sm font-display text-8xl tracking-tight writing-vertical cursor-pointer hover:bg-surface transition-colors leading-none"
+          className="absolute left-0 top-1/2 -translate-y-1/2 z-50 bg-bg border border-white/20 border-l-0 pl-0 pr-5 py-5 font-display text-8xl tracking-tight writing-vertical cursor-pointer hover:bg-surface transition-colors leading-none"
         >
           {'\u00A0\u00A0'}MUSIC{'\u00A0\u00A0'}
         </button>
@@ -74,13 +74,13 @@ export default function Home() {
         {/* Side tab: SHOWS (right) */}
         <button
           onClick={() => toggle('shows')}
-          className="absolute right-0 top-1/2 -translate-y-1/2 z-50 bg-bg pl-0 pr-5 py-5 rounded-l-sm font-display text-8xl tracking-tight writing-vertical-right cursor-pointer hover:bg-surface transition-colors leading-none"
+          className="absolute right-0 top-1/2 -translate-y-1/2 z-50 bg-bg border border-white/20 border-r-0 pl-0 pr-5 py-5 font-display text-8xl tracking-tight writing-vertical-right cursor-pointer hover:bg-surface transition-colors leading-none"
         >
           {'\u00A0\u00A0'}SHOWS{'\u00A0\u00A0'}
         </button>
 
         {/* Social links carousel */}
-        <div className="absolute bottom-0 left-0 right-0 z-20 pb-3">
+        <div className="absolute bottom-0 left-0 right-0 z-20">
           <SocialLinks />
         </div>
       </div>

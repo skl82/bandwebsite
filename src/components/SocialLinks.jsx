@@ -100,7 +100,7 @@ export default function SocialLinks() {
 
   return (
     <div>
-      <div className="flex justify-center mb-1">
+      <div className="flex justify-start mb-1">
         <span className="font-mono text-xs text-text-muted tracking-widest lowercase bg-bg border border-white/10 border-b-0 px-4 py-1">// find us on:</span>
       </div>
       <div className="relative overflow-hidden border-t border-white/10 bg-bg carousel-glitch-wrap">

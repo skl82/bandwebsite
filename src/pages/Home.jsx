@@ -12,10 +12,8 @@ export default function Home() {
     setOpenPanel(prev => (prev === panel ? null : panel))
   }
 
-  // Shift the main content when a panel opens
-  const shift = openPanel === 'music' ? 'translate-x-[33.333%]'
-    : openPanel === 'shows' ? '-translate-x-[33.333%]'
-    : 'translate-x-0'
+  // Shift the main content when music panel opens
+  const shift = openPanel === 'music' ? 'translate-x-[33.333%]' : 'translate-x-0'
 
   return (
     <div className="h-screen overflow-hidden relative">
@@ -37,20 +35,12 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Shows panel — fixed right, always rendered */}
+      {/* Shows panel — always visible, overlaying right side, shifts with music */}
       <div className={`fixed top-0 right-0 h-full w-1/3 z-40 bg-bg transition-transform duration-300 ease-in-out ${
-        openPanel === 'shows' ? 'translate-x-0' : 'translate-x-full'
+        openPanel === 'music' ? 'translate-x-[33.333vw]' : 'translate-x-0'
       }`}>
         <div className="h-full overflow-y-auto px-6 py-8">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="font-mono text-xl tracking-widest uppercase">// Shows</h2>
-            <button
-              onClick={() => setOpenPanel(null)}
-              className="font-mono text-text-muted hover:text-text text-sm leading-none cursor-pointer"
-            >
-              [close]
-            </button>
-          </div>
+          <h2 className="font-mono text-xl tracking-widest uppercase mb-6">// Shows</h2>
           <ShowsPanel />
         </div>
       </div>
@@ -77,13 +67,6 @@ export default function Home() {
           {'\u00A0'}MUSIC{'\u00A0'}
         </button>
 
-        {/* Side tab: SHOWS (right) */}
-        <button
-          onClick={() => toggle('shows')}
-          className="absolute right-0 top-1/2 -translate-y-1/2 z-50 bg-bg pl-0 pr-5 py-5 font-mono text-8xl tracking-tight writing-vertical-right cursor-pointer hover:bg-surface transition-colors leading-none"
-        >
-          {'\u00A0'}TICKETS{'\u00A0'}
-        </button>
 
         {/* Social links carousel */}
         <div className="absolute bottom-0 left-0 right-0 z-20">

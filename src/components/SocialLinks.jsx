@@ -62,25 +62,31 @@ const platforms = [
 ]
 
 export default function SocialLinks() {
+  const count = platforms.length
+  // Duplicate for seamless loop
+  const items = [...platforms, ...platforms]
+
   return (
-    <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide snap-x snap-mandatory -mx-4 px-4">
-      {platforms.map(({ name, href, color, icon }) => (
-        <a
-          key={name}
-          href={href}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="group flex-none snap-start w-36 bg-surface hover:bg-surface-light rounded-xl p-5 flex flex-col items-center gap-3 transition-all duration-200 hover:scale-105"
-          style={{ '--platform-color': color }}
-        >
-          <span className="text-text-muted group-hover:text-[var(--platform-color)] transition-colors duration-200">
-            {icon}
-          </span>
-          <span className="text-sm font-medium text-text-muted group-hover:text-text transition-colors">
-            {name}
-          </span>
-        </a>
-      ))}
+    <div className="overflow-hidden px-2">
+      <div className="flex gap-2 animate-ticker hover:[animation-play-state:paused]" style={{ width: `${count * 2 * 100 / count}%` }}>
+        {items.map(({ name, href, color, icon }, i) => (
+          <a
+            key={`${name}-${i}`}
+            href={href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group flex-1 flex items-center justify-center gap-3 py-3 bg-white/10 backdrop-blur-md rounded-lg transition-colors duration-200 hover:bg-white/20"
+            style={{ '--platform-color': color }}
+          >
+            <span className="text-white/70 group-hover:text-[var(--platform-color)] transition-colors duration-200 [&>svg]:w-5 [&>svg]:h-5">
+              {icon}
+            </span>
+            <span className="text-sm font-semibold uppercase tracking-wider text-white/80 group-hover:text-white transition-colors">
+              {name}
+            </span>
+          </a>
+        ))}
+      </div>
     </div>
   )
 }

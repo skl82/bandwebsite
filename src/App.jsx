@@ -1,17 +1,19 @@
-import { Outlet } from 'react-router-dom'
+import { Outlet, useLocation } from 'react-router-dom'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import NextShowBanner from './components/NextShowBanner'
 
 export default function App() {
+  const isHome = useLocation().pathname === '/'
+
   return (
-    <div className="min-h-screen flex flex-col bg-bg text-text">
+    <div className={`min-h-screen flex flex-col bg-bg text-text ${isHome ? 'h-screen overflow-hidden' : ''}`}>
       <Navbar />
-      <main className="flex-1 pt-16">
+      <main className="flex-1">
         <Outlet />
       </main>
-      <Footer />
-      <NextShowBanner />
+      {!isHome && <Footer />}
+      {!isHome && <NextShowBanner />}
     </div>
   )
 }

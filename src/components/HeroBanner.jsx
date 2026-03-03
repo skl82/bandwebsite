@@ -10,28 +10,26 @@ export default function HeroBanner({ show }) {
     : null
 
   return (
-    <div className="relative h-[80vh] min-h-[500px] flex items-center justify-center overflow-hidden">
+    <div className="relative w-full h-full">
       <img
         src="/hero.jpg"
         alt="araujia live"
         className="absolute inset-0 w-full h-full object-cover"
       />
-      <div className="absolute inset-0 bg-black/50" />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
 
-      <div className="relative z-10 text-center px-4">
-        <h1 className="font-display text-7xl sm:text-9xl tracking-wider mb-4">ARAUJIA</h1>
-        {show && (
-          <div className="mt-6 space-y-3">
-            <p className="text-text-muted text-lg">
-              {formatted} &middot; {show.city}
-            </p>
-            <p className="font-display text-2xl tracking-wide">{show.gig_name}</p>
-            <div className="mt-4">
-              <TicketButton href={show.ticket_link} />
-            </div>
+      {show && (
+        <div className="absolute bottom-20 left-0 right-0 z-10 text-center px-4">
+          <p className="text-text-muted text-sm uppercase tracking-widest">Next Show</p>
+          <p className="font-display text-3xl sm:text-4xl tracking-wide mt-1">{show.gig_name}</p>
+          <p className="text-text-muted mt-1">
+            {formatted} &middot; {show.venue}, {show.city}
+          </p>
+          <div className="mt-4">
+            <TicketButton href={show.ticket_link} />
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   )
 }

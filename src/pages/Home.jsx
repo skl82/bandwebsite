@@ -36,10 +36,10 @@ export default function Home() {
       </div>
 
       {/* Desktop carousels — fixed, above shows panel, shift with music */}
-      <div className={`hidden lg:block fixed top-0 left-0 right-0 z-50 transition-transform duration-300 ease-in-out ${openPanel === 'music' ? 'translate-x-[33.333%]' : 'translate-x-0'}`}>
+      <div className={`hidden lg:block fixed top-0 left-0 right-0 z-50 fade-in-flat transition-transform duration-300 ease-in-out ${openPanel === 'music' ? 'translate-x-[33.333%]' : 'translate-x-0'}`}>
         <NextShowTicker />
       </div>
-      <div className={`hidden lg:block fixed bottom-0 left-0 right-0 z-50 transition-transform duration-300 ease-in-out ${openPanel === 'music' ? 'translate-x-[33.333%]' : 'translate-x-0'}`}>
+      <div className={`hidden lg:block fixed bottom-0 left-0 right-0 z-50 fade-in-flat transition-transform duration-300 ease-in-out ${openPanel === 'music' ? 'translate-x-[33.333%]' : 'translate-x-0'}`}>
         <SocialLinks />
       </div>
 
@@ -50,20 +50,20 @@ export default function Home() {
           <HeroBanner />
 
           {/* Top bars — mobile only: ticker + social links flush */}
-          <div className="lg:hidden absolute top-0 left-0 right-0 z-20">
+          <div className="lg:hidden absolute top-0 left-0 right-0 z-20 fade-in-flat">
             <NextShowTicker />
             <SocialLinks reverseDirection hideLabel />
           </div>
 
           {/* Logo */}
-          <div className="absolute top-24 lg:top-12 left-4 z-50">
+          <div className="absolute top-24 lg:top-12 left-4 z-50 fade-in fade-in-delay-2">
             <img src="/araujialogo.png" alt="ARAUJIA" className="h-16 lg:h-[8.4rem]" />
           </div>
 
           {/* Side tab: MUSIC — desktop vertical tab */}
           <button
             onClick={() => toggle('music')}
-            className="hidden lg:block absolute left-0 top-1/2 -translate-y-1/2 z-50 bg-bg pl-0 pr-5 py-5 font-mono text-8xl tracking-tight writing-vertical cursor-pointer hover:bg-surface transition-colors leading-none"
+            className="hidden lg:block absolute left-0 top-1/2 -translate-y-1/2 z-50 bg-bg pl-0 pr-5 py-5 font-mono text-8xl tracking-tight writing-vertical cursor-pointer hover:bg-surface transition-colors leading-none fade-in fade-in-delay-3"
           >
             {'\u00A0'}MUSIC{'\u00A0'}
           </button>
@@ -76,6 +76,7 @@ export default function Home() {
           relative -mt-[6vh] mx-4 rounded-lg bg-bg/95 backdrop-blur-sm border border-white/10 p-4 z-10
           lg:fixed lg:top-14 lg:bottom-14 lg:right-4 lg:h-auto lg:w-1/3 lg:z-40 lg:bg-bg lg:backdrop-blur-none lg:border-0 lg:rounded-none lg:m-0 lg:p-0
           lg:transition-transform lg:duration-300 lg:ease-in-out
+          fade-in fade-in-delay-3
           ${openPanel === 'music' ? 'lg:translate-x-full' : 'lg:translate-x-0'}
         `}>
           <div className="lg:relative lg:h-full">
@@ -88,7 +89,7 @@ export default function Home() {
         </div>
 
         {/* Music tile — mobile only, below shows */}
-        <div className="lg:hidden relative mx-4 mt-6 rounded-lg bg-bg/95 backdrop-blur-sm border border-white/10 p-4 z-10">
+        <div className="lg:hidden relative mx-4 mt-6 rounded-lg bg-bg/95 backdrop-blur-sm border border-white/10 p-4 z-10 fade-in fade-in-delay-4">
           <h2 className="font-mono text-xl tracking-widest uppercase mb-4">// Music</h2>
           <SpotifyEmbed height={352} />
         </div>

@@ -4,7 +4,7 @@ const randomHero = heroImages[Math.floor(Math.random() * heroImages.length)]
 
 export default function HeroBanner() {
   return (
-    <div className="absolute inset-0">
+    <div className="absolute inset-0 fade-in">
       <img
         src={randomHero}
         alt="araujia live"

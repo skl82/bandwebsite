@@ -78,9 +78,12 @@ export default function Home() {
           lg:transition-transform lg:duration-300 lg:ease-in-out
           ${openPanel === 'music' ? 'lg:translate-x-full' : 'lg:translate-x-0'}
         `}>
-          <div className="lg:h-full lg:overflow-y-auto lg:px-6 lg:py-8">
-            <h2 className="font-mono text-xl tracking-widest uppercase mb-6">// Shows</h2>
-            <ShowsPanel />
+          <div className="lg:relative lg:h-full">
+            <div className="lg:h-full lg:overflow-y-auto lg:px-6 lg:pt-4 lg:pb-12">
+              <h2 className="font-mono text-xl tracking-widest uppercase mb-6">// Shows</h2>
+              <ShowsPanel />
+            </div>
+            <div className="hidden lg:block absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-bg to-transparent pointer-events-none" />
           </div>
         </div>
 

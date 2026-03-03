@@ -121,6 +121,25 @@ body {
   pointer-events: none;
 }
 
+.carousel-glitch-wrap-offset {
+  animation: carousel-glitch 15s 7.5s linear infinite, glitch-skew 15s 7.5s linear infinite;
+}
+
+.carousel-glitch-wrap-offset::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 255, 0, 0.03) 2px,
+    rgba(0, 255, 0, 0.03) 4px
+  );
+  animation: glitch-scanline 15s 7.5s linear infinite;
+  pointer-events: none;
+}
+
 .writing-vertical {
   writing-mode: vertical-rl;
   text-orientation: mixed;

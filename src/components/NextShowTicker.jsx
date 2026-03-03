@@ -61,7 +61,7 @@ export default function NextShowTicker() {
   const items = [text, text, text, text]
 
   return (
-    <div className="overflow-hidden bg-accent">
+    <div className="relative overflow-hidden bg-accent carousel-glitch-wrap-offset">
       <div ref={trackRef} className="flex whitespace-nowrap will-change-transform">
         {items.map((t, i) => (
           <span key={i} className="inline-flex items-center font-mono text-sm tracking-widest uppercase text-white py-2">

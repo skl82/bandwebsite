@@ -38,6 +38,13 @@ export default function ShowCard({ show, isPast }) {
       })
     : null
 
+  const doorsTime = show.doors_time
+    ? new Date(`2000-01-01T${show.doors_time}`).toLocaleTimeString('en-US', {
+        hour: 'numeric',
+        minute: '2-digit',
+      })
+    : null
+
   return (
     <div className="bg-surface rounded-lg overflow-hidden flex flex-col sm:flex-row">
       {show.poster_url && (
@@ -53,8 +60,17 @@ export default function ShowCard({ show, isPast }) {
         <div>
           <h3 className="font-display text-2xl tracking-wide">{show.gig_name}</h3>
           <p className="text-text-muted text-sm mt-1">
-            {formatted}{time && ` · ${time}`} · {show.venue}, {show.city}
+            {formatted}
+            {doorsTime && time
+              ? ` · Doors: ${doorsTime} · Show: ${time}`
+              : time ? ` · ${time}` : ''}
+            {' · '}{show.venue}, {show.city}
           </p>
+          {show.lineup?.length > 0 && (
+            <p className="text-text-muted text-sm">
+              w/ {show.lineup.join(', ')}
+            </p>
+          )}
         </div>
         <div className="flex items-center gap-3">
           {!isPast && show.ticket_link && <TicketButton href={show.ticket_link} />}

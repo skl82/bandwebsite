@@ -6,11 +6,13 @@ export default function ShowForm({ show, onSaved }) {
     gig_name: show?.gig_name || '',
     date: show?.date || '',
     time: show?.time || '',
+    doors_time: show?.doors_time || '',
     venue: show?.venue || '',
     city: show?.city || '',
     ticket_link: show?.ticket_link || '',
     visible: show?.visible || false,
   })
+  const [lineup, setLineup] = useState(show?.lineup || [])
   const [posterFile, setPosterFile] = useState(null)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState(null)
@@ -45,7 +47,7 @@ export default function ShowForm({ show, onSaved }) {
       poster_url = publicUrl
     }
 
-    const payload = { ...form, poster_url }
+    const payload = { ...form, poster_url, lineup: lineup.filter(b => b.trim()) }
 
     if (show) {
       const { error } = await supabase.from('shows').update(payload).eq('id', show.id)
@@ -71,7 +73,7 @@ export default function ShowForm({ show, onSaved }) {
         required
         className={inputCls}
       />
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-3 gap-4">
         <input
           type="date"
           value={form.date}
@@ -79,12 +81,24 @@ export default function ShowForm({ show, onSaved }) {
           required
           className={inputCls}
         />
-        <input
-          type="time"
-          value={form.time}
-          onChange={e => update('time', e.target.value)}
-          className={inputCls}
-        />
+        <div>
+          <label className="block text-text-muted text-xs mb-1 font-mono">Show</label>
+          <input
+            type="time"
+            value={form.time}
+            onChange={e => update('time', e.target.value)}
+            className={inputCls}
+          />
+        </div>
+        <div>
+          <label className="block text-text-muted text-xs mb-1 font-mono">Doors</label>
+          <input
+            type="time"
+            value={form.doors_time}
+            onChange={e => update('doors_time', e.target.value)}
+            className={inputCls}
+          />
+        </div>
       </div>
       <div className="grid grid-cols-2 gap-4">
         <input
@@ -111,6 +125,40 @@ export default function ShowForm({ show, onSaved }) {
         onChange={e => update('ticket_link', e.target.value)}
         className={inputCls}
       />
+      <div>
+        <label className="block text-text-muted text-xs mb-2 font-mono">// Lineup</label>
+        <div className="space-y-2">
+          {lineup.map((band, i) => (
+            <div key={i} className="flex gap-2">
+              <input
+                type="text"
+                placeholder={`Band ${i + 1}`}
+                value={band}
+                onChange={e => {
+                  const next = [...lineup]
+                  next[i] = e.target.value
+                  setLineup(next)
+                }}
+                className={inputCls + ' font-mono'}
+              />
+              <button
+                type="button"
+                onClick={() => setLineup(lineup.filter((_, j) => j !== i))}
+                className="text-text-muted hover:text-accent text-sm font-mono px-2 shrink-0"
+              >
+                [x]
+              </button>
+            </div>
+          ))}
+        </div>
+        <button
+          type="button"
+          onClick={() => setLineup([...lineup, ''])}
+          className="text-text-muted hover:text-text text-xs font-mono mt-2 transition-colors"
+        >
+          [ + Add Band ]
+        </button>
+      </div>
       <div>
         <label className="block text-text-muted text-sm mb-2">Poster Image</label>
         <input

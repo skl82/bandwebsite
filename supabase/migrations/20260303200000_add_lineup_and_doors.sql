@@ -1,0 +1,2 @@
+ALTER TABLE shows ADD COLUMN lineup TEXT[];
+ALTER TABLE shows ADD COLUMN doors_time TIME;

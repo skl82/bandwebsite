@@ -34,6 +34,12 @@ export default function ShowsPanel() {
               minute: '2-digit',
             })
           : null
+        const doorsTime = show.doors_time
+          ? new Date(`2000-01-01T${show.doors_time}`).toLocaleTimeString('en-US', {
+              hour: 'numeric',
+              minute: '2-digit',
+            })
+          : null
 
         // Build Google Calendar URL
         const dateClean = show.date.replace(/-/g, '')
@@ -57,11 +63,19 @@ export default function ShowsPanel() {
             <div className="flex flex-col justify-between min-w-0 py-1">
               <h3 className="font-display text-2xl tracking-wide">{show.gig_name}</h3>
               <p className="font-mono text-text-muted text-xs mt-2 tracking-wide">
-                {formatted}{time && ` // ${time}`}
+                {formatted}
+                {doorsTime && time
+                  ? ` // Doors: ${doorsTime} // Show: ${time}`
+                  : time ? ` // ${time}` : ''}
               </p>
               <p className="font-mono text-text-muted text-xs tracking-wide">
                 {show.venue} &mdash; {show.city}
               </p>
+              {show.lineup?.length > 0 && (
+                <p className="font-mono text-text-muted text-xs tracking-wide">
+                  w/ {show.lineup.join(', ')}
+                </p>
+              )}
               {show.ticket_link && (
                 <div className="mt-3">
                   <TicketButton href={show.ticket_link} size="lg" />

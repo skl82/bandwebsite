@@ -65,7 +65,7 @@ const platforms = [
 
 const SPEED = 50 // pixels per second
 
-export default function SocialLinks() {
+export default function SocialLinks({ reverseDirection = false, hideLabel = false }) {
   const trackRef = useRef(null)
   const offsetRef = useRef(0)
   const rafRef = useRef(null)
@@ -75,17 +75,26 @@ export default function SocialLinks() {
     const track = trackRef.current
     if (!track) return
 
+    // When scrolling right, start offset by one copy so there's content to reveal
+    if (reverseDirection) {
+      const copyWidth = track.scrollWidth / 4
+      offsetRef.current = -copyWidth
+    }
+
     function tick(now) {
       if (lastRef.current === null) lastRef.current = now
       const dt = (now - lastRef.current) / 1000
       lastRef.current = now
 
-      offsetRef.current -= SPEED * dt
+      const dir = reverseDirection ? 1 : -1
+      offsetRef.current += dir * SPEED * dt
 
       // Reset after scrolling one copy's worth (1/4 of total since we render 4 copies)
       const copyWidth = track.scrollWidth / 4
-      if (Math.abs(offsetRef.current) >= copyWidth) {
-        offsetRef.current += copyWidth
+      if (reverseDirection) {
+        if (offsetRef.current >= 0) offsetRef.current -= copyWidth
+      } else {
+        if (Math.abs(offsetRef.current) >= copyWidth) offsetRef.current += copyWidth
       }
 
       track.style.transform = `translate3d(${offsetRef.current}px, 0, 0)`
@@ -100,10 +109,12 @@ export default function SocialLinks() {
 
   return (
     <div>
-      <div className="flex justify-start mb-1">
-        <span className="font-mono text-xs text-text-muted tracking-widest lowercase bg-bg border border-white/10 border-b-0 px-4 py-1">// find us on:</span>
-      </div>
-      <div className="relative overflow-hidden border-t border-white/10 bg-bg carousel-glitch-wrap">
+      {!hideLabel && (
+        <div className="flex justify-start mb-1">
+          <span className="font-mono text-xs text-text-muted tracking-widest lowercase bg-bg border border-white/10 border-b-0 px-4 py-1">// find us on:</span>
+        </div>
+      )}
+      <div className={`relative overflow-hidden bg-bg carousel-glitch-wrap ${!hideLabel ? 'border-t border-white/10' : ''}`}>
         <div ref={trackRef} className="flex whitespace-nowrap will-change-transform">
           {items.map(({ name, href, color, icon }, i) => (
             <a

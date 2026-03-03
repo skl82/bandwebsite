@@ -57,11 +57,11 @@ export default function ShowsPanel() {
               <img
                 src={show.poster_url}
                 alt={show.gig_name}
-                className="w-42 shrink-0 object-contain self-center"
+                className="w-24 lg:w-42 shrink-0 object-contain self-center"
               />
             )}
             <div className="flex flex-col justify-between min-w-0 py-1">
-              <h3 className="font-display text-2xl tracking-wide">{show.gig_name}</h3>
+              <h3 className="font-display text-xl lg:text-2xl tracking-wide">{show.gig_name}</h3>
               <p className="font-mono text-text-muted text-xs mt-2 tracking-wide">
                 {formatted}
                 {doorsTime && time

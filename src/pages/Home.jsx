@@ -35,18 +35,24 @@ export default function Home() {
         </div>
       </div>
 
+      {/* Desktop carousels — fixed, above shows panel, shift with music */}
+      <div className={`hidden lg:block fixed top-0 left-0 right-0 z-50 transition-transform duration-300 ease-in-out ${openPanel === 'music' ? 'translate-x-[33.333%]' : 'translate-x-0'}`}>
+        <NextShowTicker />
+      </div>
+      <div className={`hidden lg:block fixed bottom-0 left-0 right-0 z-50 transition-transform duration-300 ease-in-out ${openPanel === 'music' ? 'translate-x-[33.333%]' : 'translate-x-0'}`}>
+        <SocialLinks />
+      </div>
+
       {/* Main content — shifts when music opens (desktop only) */}
       <div className={`w-full relative transition-transform duration-300 ease-in-out ${shift}`}>
         {/* Hero — full viewport */}
         <div className="h-[75vh] lg:h-screen relative">
           <HeroBanner />
 
-          {/* Top bars — ticker + social links flush on mobile */}
-          <div className="absolute top-0 left-0 right-0 z-20">
+          {/* Top bars — mobile only: ticker + social links flush */}
+          <div className="lg:hidden absolute top-0 left-0 right-0 z-20">
             <NextShowTicker />
-            <div className="lg:hidden">
-              <SocialLinks reverseDirection hideLabel />
-            </div>
+            <SocialLinks reverseDirection hideLabel />
           </div>
 
           {/* Logo */}
@@ -63,17 +69,14 @@ export default function Home() {
           </button>
 
           {/* Social links — desktop: bottom */}
-          <div className="hidden lg:block absolute bottom-0 left-0 right-0 z-20">
-            <SocialLinks />
-          </div>
         </div>
 
         {/* Shows — overlapping tile on mobile, fixed panel on desktop */}
         <div className={`
           relative -mt-[6vh] mx-4 rounded-lg bg-bg/95 backdrop-blur-sm border border-white/10 p-4 z-10
-          lg:fixed lg:top-0 lg:right-0 lg:h-full lg:w-1/3 lg:z-40 lg:bg-bg lg:backdrop-blur-none lg:border-0 lg:rounded-none lg:m-0 lg:p-0
+          lg:fixed lg:top-14 lg:bottom-14 lg:right-4 lg:h-auto lg:w-1/3 lg:z-40 lg:bg-bg lg:backdrop-blur-none lg:border-0 lg:rounded-none lg:m-0 lg:p-0
           lg:transition-transform lg:duration-300 lg:ease-in-out
-          ${openPanel === 'music' ? 'lg:translate-x-[33.333vw]' : 'lg:translate-x-0'}
+          ${openPanel === 'music' ? 'lg:translate-x-full' : 'lg:translate-x-0'}
         `}>
           <div className="lg:h-full lg:overflow-y-auto lg:px-6 lg:py-8">
             <h2 className="font-mono text-xl tracking-widest uppercase mb-6">// Shows</h2>

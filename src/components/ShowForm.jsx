@@ -47,7 +47,14 @@ export default function ShowForm({ show, onSaved }) {
       poster_url = publicUrl
     }
 
-    const payload = { ...form, poster_url, lineup: lineup.filter(b => b.trim()) }
+    const payload = {
+      ...form,
+      time: form.time || null,
+      doors_time: form.doors_time || null,
+      ticket_link: form.ticket_link || null,
+      poster_url,
+      lineup: lineup.filter(b => b.trim()),
+    }
 
     if (show) {
       const { error } = await supabase.from('shows').update(payload).eq('id', show.id)

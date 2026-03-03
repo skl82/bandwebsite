@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useState, useRef, useCallback, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import HeroBanner from '../components/HeroBanner'
 import ShowsPanel from '../components/ShowsPanel'
 import SpotifyEmbed from '../components/SpotifyEmbed'
@@ -7,9 +8,90 @@ import NextShowTicker from '../components/NextShowTicker'
 
 export default function Home() {
   const [openPanel, setOpenPanel] = useState(null)
+  const [logoUnlocked, setLogoUnlocked] = useState(false)
+  const hasAnimated = useRef(false)
+  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 })
+  const [grabbed, setGrabbed] = useState(false)
+  const [lidOpen, setLidOpen] = useState(false)
+  const draggingRef = useRef(false)
+  const dragStart = useRef({ x: 0, y: 0 })
+  const logoRef = useRef(null)
+  const bucketRef = useRef(null)
+  const navigate = useNavigate()
 
   function toggle(panel) {
     setOpenPanel(prev => (prev === panel ? null : panel))
+  }
+
+  function resetLogo() {
+    setLogoUnlocked(false)
+    draggingRef.current = false
+    setDragOffset({ x: 0, y: 0 })
+    setLidOpen(false)
+  }
+
+  const offsetRef = useRef({ x: 0, y: 0 })
+
+  useEffect(() => {
+    function onKeyDown(e) {
+      if (e.key === 'Escape' && logoUnlocked) resetLogo()
+    }
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
+  }, [logoUnlocked])
+
+  function onLogoDoubleClick() {
+    if (!logoUnlocked && window.innerWidth >= 1024) {
+      hasAnimated.current = true
+      setLogoUnlocked(true)
+    }
+  }
+
+  function onLogoPointerDown(e) {
+    if (!logoUnlocked) return
+    e.preventDefault()
+    draggingRef.current = true
+    setGrabbed(true)
+    dragStart.current = { x: e.clientX - offsetRef.current.x, y: e.clientY - offsetRef.current.y }
+
+    function onMove(ev) {
+      if (!draggingRef.current) return
+      const nx = ev.clientX - dragStart.current.x
+      const ny = ev.clientY - dragStart.current.y
+      offsetRef.current = { x: nx, y: ny }
+      setDragOffset({ x: nx, y: ny })
+      // Proximity check for lid
+      if (bucketRef.current) {
+        const rect = bucketRef.current.getBoundingClientRect()
+        const cx = rect.left + rect.width / 2
+        const cy = rect.top + rect.height / 2
+        const dist = Math.hypot(ev.clientX - cx, ev.clientY - cy)
+        setLidOpen(dist < 150)
+      }
+    }
+
+    function onUp(ev) {
+      draggingRef.current = false
+      setGrabbed(false)
+      setLidOpen(false)
+      window.removeEventListener('pointermove', onMove)
+      window.removeEventListener('pointerup', onUp)
+      if (bucketRef.current) {
+        const rect = bucketRef.current.getBoundingClientRect()
+        if (
+          ev.clientX >= rect.left && ev.clientX <= rect.right &&
+          ev.clientY >= rect.top && ev.clientY <= rect.bottom
+        ) {
+          navigate('/login')
+          return
+        }
+      }
+      offsetRef.current = { x: 0, y: 0 }
+      setDragOffset({ x: 0, y: 0 })
+    }
+
+    window.addEventListener('pointermove', onMove)
+    window.addEventListener('pointerup', onUp)
   }
 
   // Shift the main content when music panel opens (desktop only)
@@ -55,10 +137,64 @@ export default function Home() {
             <SocialLinks reverseDirection hideLabel />
           </div>
 
-          {/* Logo */}
-          <div className="absolute top-24 lg:top-12 left-4 z-50 fade-in fade-in-delay-2">
-            <img src="/araujialogo.png" alt="ARAUJIA" className="h-16 lg:h-[8.4rem]" />
+          {/* Ghost outline — stays in original position when logo is unlocked */}
+          {logoUnlocked && (
+            <div className="absolute top-24 lg:top-12 left-4 z-40 pointer-events-none">
+              <img src="/araujialogo.png" alt="" className="h-16 lg:h-[8.4rem] opacity-30 border border-dashed border-white/40" />
+            </div>
+          )}
+
+          {/* Logo — draggable when unlocked */}
+          <div
+            ref={logoRef}
+            onDoubleClick={onLogoDoubleClick}
+            onPointerDown={onLogoPointerDown}
+            className={`absolute top-24 lg:top-12 left-4 z-[51] select-none ${
+              logoUnlocked ? 'cursor-grab active:cursor-grabbing' : (hasAnimated.current ? '' : 'fade-in fade-in-delay-2')
+            }`}
+            style={logoUnlocked ? { transform: `translate(${dragOffset.x}px, ${dragOffset.y}px) scale(${grabbed ? 0.5 : 1})`, transition: grabbed ? 'scale 0.2s ease' : 'transform 0.3s ease, scale 0.2s ease', touchAction: 'none' } : undefined}
+          >
+            <img
+              src="/araujialogo.png"
+              alt="ARAUJIA"
+              className={`h-16 lg:h-[8.4rem] transition-shadow ${
+                logoUnlocked ? 'drop-shadow-[0_0_12px_rgba(255,255,255,0.4)] animate-pulse' : ''
+              }`}
+              draggable={false}
+            />
           </div>
+
+          {/* Drop zone bucket with split lid */}
+          {logoUnlocked && (
+            <div
+              ref={bucketRef}
+              className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[60] fade-in pointer-events-none"
+            >
+              {/* Split lid — two flaps that swing up and outward in 2D */}
+              <div className="flex">
+                {/* Left flap — hinges at bottom-right corner, rotates up-left */}
+                <div
+                  className="w-1/2 h-4 border-2 border-dashed border-white/50 rounded-tl-lg bg-white/10 transition-transform duration-300 ease-in-out"
+                  style={{
+                    transformOrigin: 'bottom left',
+                    transform: lidOpen ? 'rotate(-60deg)' : 'rotate(0deg)',
+                  }}
+                />
+                {/* Right flap — hinges at bottom-right corner, rotates up-right */}
+                <div
+                  className="w-1/2 h-4 border-2 border-l-0 border-dashed border-white/50 rounded-tr-lg bg-white/10 transition-transform duration-300 ease-in-out"
+                  style={{
+                    transformOrigin: 'bottom right',
+                    transform: lidOpen ? 'rotate(60deg)' : 'rotate(0deg)',
+                  }}
+                />
+              </div>
+              {/* Bucket body */}
+              <div className={`border-2 border-t-0 border-dashed border-white/50 rounded-b-lg px-6 py-4 font-mono text-sm transition-colors duration-300 ${lidOpen ? 'text-red-500' : 'text-white/60'}`}>
+                [admin login]
+              </div>
+            </div>
+          )}
 
           {/* Side tab: MUSIC — desktop vertical tab */}
           <button

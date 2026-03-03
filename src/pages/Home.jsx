@@ -65,8 +65,8 @@ export default function Home() {
         </div>
 
         {/* Logo */}
-        <div className="absolute top-12 left-4 z-50 bg-bg border border-white/20 px-6 py-4">
-          <span className="font-display text-5xl tracking-[0.3em] text-text">ARAUJIA</span>
+        <div className="absolute top-12 left-4 z-50">
+          <img src="/araujialogo.png" alt="ARAUJIA" className="h-[8.4rem]" />
         </div>
 
         {/* Side tab: MUSIC (left) */}

@@ -14,6 +14,7 @@ export default function ShowsPanel() {
       .gte('date', today)
       .order('date', { ascending: true })
       .then(({ data }) => setShows(data || []))
+      .catch(() => {})
   }, [])
 
   if (shows.length === 0) {

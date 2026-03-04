@@ -35,7 +35,7 @@ export default function ShowForm({ show, onSaved }) {
         .upload(filename, posterFile)
 
       if (uploadError) {
-        setError(uploadError.message)
+        setError('Something went wrong. Please try again.')
         setSaving(false)
         return
       }
@@ -58,10 +58,10 @@ export default function ShowForm({ show, onSaved }) {
 
     if (show) {
       const { error } = await supabase.from('shows').update(payload).eq('id', show.id)
-      if (error) { setError(error.message); setSaving(false); return }
+      if (error) { setError('Something went wrong. Please try again.'); setSaving(false); return }
     } else {
       const { error } = await supabase.from('shows').insert(payload)
-      if (error) { setError(error.message); setSaving(false); return }
+      if (error) { setError('Something went wrong. Please try again.'); setSaving(false); return }
     }
 
     setSaving(false)
@@ -78,6 +78,7 @@ export default function ShowForm({ show, onSaved }) {
         value={form.gig_name}
         onChange={e => update('gig_name', e.target.value)}
         required
+        maxLength={200}
         className={inputCls}
       />
       <div className="grid grid-cols-3 gap-4">
@@ -114,6 +115,7 @@ export default function ShowForm({ show, onSaved }) {
           value={form.venue}
           onChange={e => update('venue', e.target.value)}
           required
+          maxLength={200}
           className={inputCls}
         />
         <input
@@ -122,6 +124,7 @@ export default function ShowForm({ show, onSaved }) {
           value={form.city}
           onChange={e => update('city', e.target.value)}
           required
+          maxLength={100}
           className={inputCls}
         />
       </div>
@@ -130,6 +133,7 @@ export default function ShowForm({ show, onSaved }) {
         placeholder="Ticket Link (URL)"
         value={form.ticket_link}
         onChange={e => update('ticket_link', e.target.value)}
+        maxLength={500}
         className={inputCls}
       />
       <div>
@@ -146,6 +150,7 @@ export default function ShowForm({ show, onSaved }) {
                   next[i] = e.target.value
                   setLineup(next)
                 }}
+                maxLength={100}
                 className={inputCls + ' font-mono'}
               />
               <button

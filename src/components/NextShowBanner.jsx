@@ -17,6 +17,7 @@ export default function NextShowBanner() {
       .then(({ data }) => {
         if (data?.length) setShow(data[0])
       })
+      .catch(() => {})
   }, [])
 
   if (!show) return null

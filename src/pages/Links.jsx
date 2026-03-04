@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '../supabase'
+import { safeHref } from '../lib/url'
 
 export default function Links() {
   const [nextShow, setNextShow] = useState(null)
@@ -16,13 +17,14 @@ export default function Links() {
       .then(({ data }) => {
         if (data?.length) setNextShow(data[0])
       })
+      .catch(() => {})
   }, [])
 
   const links = [
     ...(nextShow
       ? [{
           label: `Tickets — ${new Date(nextShow.date + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`,
-          href: nextShow.ticket_link,
+          href: safeHref(nextShow.ticket_link),
           highlight: true,
         }]
       : []),

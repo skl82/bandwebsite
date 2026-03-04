@@ -18,6 +18,7 @@ export default function Music() {
       .then(({ data }) => {
         if (data?.length) setNextShow(data[0])
       })
+      .catch(() => {})
   }, [])
 
   const formatted = nextShow

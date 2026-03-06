@@ -173,12 +173,17 @@ export default function ShowForm({ show, onSaved }) {
       </div>
       <div>
         <label className="block text-text-muted text-sm mb-2">Poster Image</label>
-        <input
-          type="file"
-          accept="image/*"
-          onChange={e => setPosterFile(e.target.files[0] || null)}
-          className="text-sm text-text-muted"
-        />
+        <label className="flex items-center gap-3 cursor-pointer group">
+          <span className="inline-block bg-white/5 border border-white/10 rounded px-4 py-2.5 text-sm font-mono text-text-muted group-hover:border-accent group-hover:text-text transition-colors">
+            {posterFile ? posterFile.name : '[ Upload Poster ]'}
+          </span>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={e => setPosterFile(e.target.files[0] || null)}
+            className="hidden"
+          />
+        </label>
         {show?.poster_url && !posterFile && (
           <p className="text-text-muted text-xs mt-1">Current poster will be kept</p>
         )}

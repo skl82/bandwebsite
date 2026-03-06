@@ -160,7 +160,7 @@ export default function Home() {
             <img
               src="/araujialogo.png"
               alt="ARAUJIA"
-              className={`h-16 lg:h-[8.4rem] transition-shadow ${
+              className={`h-[6.9rem] lg:h-[8.4rem] transition-shadow ${
                 logoUnlocked ? 'drop-shadow-[0_0_12px_rgba(255,255,255,0.4)] animate-pulse' : ''
               }`}
               draggable={false}

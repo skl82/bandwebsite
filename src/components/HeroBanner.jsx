@@ -8,6 +8,8 @@ export default function HeroBanner() {
       <img
         src={randomHero}
         alt="araujia live"
+        fetchPriority="high"
+        decoding="async"
         className="w-full h-full object-cover"
       />
       <div className="absolute inset-0 bg-black/20" />

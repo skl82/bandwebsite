@@ -3,6 +3,36 @@ import { Navigate } from 'react-router-dom'
 import { supabase } from '../supabase'
 import ShowForm from '../components/ShowForm'
 
+const greetings = [
+  'Is that THE Araujia?',
+  'Welcome back, Mr. Araujia.',
+  'The moth vine himself.',
+  'Security! Just kidding. Come in.',
+  'You again? Fine, come in.',
+  'Legend has it... you returned.',
+  'The backstage door is open.',
+  'Access granted. Try not to break anything.',
+  'Oh wow, a real rock star.',
+  'The vine grows ever onward.',
+  'Ah yes, the talent has arrived.',
+  'Quick, look busy — the boss is here.',
+  'Another day, another gig to manage.',
+  'Back so soon? Must be a busy tour.',
+  'The flowers are blooming. So is the inbox.',
+  'One does not simply log in to Araujia.',
+  'Welcome to the control room. Handle with care.',
+  'All systems nominal. Vibes: immaculate.',
+  'You have 0 new fans. Just kidding.',
+  'Plot twist: you were the admin all along.',
+  'Doors: open. Soundcheck: pending.',
+  'The algorithm smiles upon you today.',
+  'Breaking news: local band updates website.',
+  'May your set times be accurate and your ticket links unbroken.',
+  'You look different. New haircut?',
+]
+
+const greeting = greetings[Math.floor(Math.random() * greetings.length)]
+
 export default function Admin() {
   const [session, setSession] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -65,7 +95,10 @@ export default function Admin() {
   return (
     <div className="max-w-4xl mx-auto px-4 py-12 pb-24">
       <div className="flex items-center justify-between mb-8">
-        <h1 className="font-display text-3xl tracking-wide">ADMIN</h1>
+        <div>
+          <h1 className="font-display text-3xl tracking-wide">ADMIN</h1>
+          <p className="text-text-muted text-sm font-mono mt-1">{greeting}</p>
+        </div>
         <button
           onClick={handleLogout}
           className="text-text-muted text-sm hover:text-text transition-colors"

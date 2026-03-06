@@ -6,7 +6,7 @@ import App from './App'
 import Home from './pages/Home'
 import Shows from './pages/Shows'
 import Music from './pages/Music'
-import Links from './pages/Links'
+// import Links from './pages/Links' // scaffold kept, route disabled
 import Admin from './pages/Admin'
 import Login from './pages/Login'
 
@@ -21,7 +21,7 @@ createRoot(document.getElementById('root')).render(
           <Route path="admin" element={<Admin />} />
           <Route path="login" element={<Login />} />
         </Route>
-        <Route path="links" element={<Links />} />
+        {/* <Route path="links" element={<Links />} /> */}
       </Routes>
     </BrowserRouter>
   </StrictMode>,

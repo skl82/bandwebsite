@@ -53,16 +53,16 @@ export default function ShowsPanel() {
         const gcalUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(show.gig_name)}&dates=${startDate}/${endDate}&location=${encodeURIComponent(`${show.venue}, ${show.city}`)}&details=${encodeURIComponent(`Araujia live at ${show.venue}${show.ticket_link ? `\nTickets: ${show.ticket_link}` : ''}`)}`
 
         return (
-          <div key={show.id} className="flex items-stretch gap-4 border-b border-white/10 pb-5 last:border-0">
+          <div key={show.id} className="flex items-stretch lg:flex-col lg:items-start xl:flex-row xl:items-stretch gap-4 border-b border-white/10 pb-5 last:border-0">
             {show.poster_url && (
               <img
                 src={show.poster_url}
                 alt={show.gig_name}
-                className="w-24 lg:w-42 shrink-0 object-contain self-center"
+                className="w-24 xl:w-42 shrink-0 object-contain self-center"
               />
             )}
             <div className="flex flex-col justify-between min-w-0 py-1">
-              <h3 className="font-display text-xl lg:text-2xl tracking-wide">{show.gig_name}</h3>
+              <h3 className="font-display text-xl xl:text-2xl tracking-wide">{show.gig_name}</h3>
               <p className="font-mono text-text-muted text-xs mt-2 tracking-wide">
                 {formatted}
                 {doorsTime && time

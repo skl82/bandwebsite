@@ -202,7 +202,8 @@ export default function Home() {
           {/* Side tab: MUSIC — desktop vertical tab */}
           <button
             onClick={() => toggle('music')}
-            className="hidden lg:block absolute left-0 top-1/2 -translate-y-1/2 z-50 bg-bg pl-0 pr-5 py-5 font-mono text-8xl tracking-tight writing-vertical cursor-pointer hover:bg-surface transition-colors leading-none fade-in fade-in-delay-3"
+            className="hidden lg:block absolute left-0 -translate-y-1/2 z-50 bg-bg pl-0 pr-5 py-5 font-mono tracking-tight writing-vertical cursor-pointer hover:bg-surface transition-colors leading-none fade-in fade-in-delay-3"
+            style={{ fontSize: 'min(7.2rem, 9.6vh)', top: 'calc(50% + 5.7rem)' }}
           >
             {'\u00A0'}MUSIC{'\u00A0'}
           </button>

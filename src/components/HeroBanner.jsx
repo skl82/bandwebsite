@@ -1,4 +1,4 @@
-const heroImages = ['/hero.jpg', '/hero2.jpg', '/hero3.jpg', '/hero4.jpg', '/hero5.jpg', '/hero6.jpg', '/hero7.jpg']
+const heroImages = ['/hero.jpg', '/hero2.jpg', '/hero3.jpg', '/hero4.jpg', '/hero5.jpg', '/hero7.jpg']
 
 const randomHero = heroImages[Math.floor(Math.random() * heroImages.length)]
 

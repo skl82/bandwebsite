@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '../supabase'
 import TicketButton from './TicketButton'
+import MailchimpSignup from './MailchimpSignup'
 
 export default function ShowsPanel() {
   const [shows, setShows] = useState([])
@@ -17,13 +18,11 @@ export default function ShowsPanel() {
       .catch(() => {})
   }, [])
 
-  if (shows.length === 0) {
-    return <p className="font-mono text-text-muted text-sm">// no upcoming shows</p>
-  }
-
   return (
     <div className="space-y-5">
-      {shows.map(show => {
+      {shows.length === 0 ? (
+        <p className="font-mono text-text-muted text-sm">// no upcoming shows</p>
+      ) : shows.map(show => {
         const formatted = new Date(show.date + 'T00:00:00').toLocaleDateString('en-US', {
           weekday: 'short',
           month: 'short',
@@ -94,6 +93,7 @@ export default function ShowsPanel() {
           </div>
         )
       })}
+      <MailchimpSignup />
     </div>
   )
 }

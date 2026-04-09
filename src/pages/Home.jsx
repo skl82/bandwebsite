@@ -5,6 +5,7 @@ import ShowsPanel from '../components/ShowsPanel'
 import SpotifyEmbed from '../components/SpotifyEmbed'
 import SocialLinks from '../components/SocialLinks'
 import NextShowTicker from '../components/NextShowTicker'
+import MailchimpSignup from '../components/MailchimpSignup'
 
 export default function Home() {
   const [openPanel, setOpenPanel] = useState(null)
@@ -219,12 +220,16 @@ export default function Home() {
           fade-in fade-in-delay-3
           ${openPanel === 'music' ? 'lg:translate-x-full' : 'lg:translate-x-0'}
         `}>
-          <div className="lg:relative lg:h-full">
-            <div className="lg:h-full lg:overflow-y-auto lg:px-6 lg:pt-4 lg:pb-12">
+          <div className="lg:relative lg:h-full lg:flex lg:flex-col">
+            <div className="lg:flex-1 lg:overflow-y-auto lg:px-6 lg:pt-4 lg:pb-16">
               <h2 className="font-mono text-xl tracking-widest uppercase mb-6">// Shows</h2>
               <ShowsPanel />
             </div>
-            <div className="hidden lg:block absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-bg to-transparent pointer-events-none" />
+            <div className="hidden lg:block absolute bottom-[5.5rem] left-0 right-0 h-16 bg-gradient-to-t from-bg to-transparent pointer-events-none" />
+            <div className="border-t border-white/10 mt-4 pt-4 px-4 pb-2 lg:mt-0 lg:px-6 lg:pt-3 lg:pb-4 bg-bg">
+              <p className="font-mono text-xs text-text-muted tracking-widest uppercase mb-3">// stay in the loop</p>
+              <MailchimpSignup />
+            </div>
           </div>
         </div>
 

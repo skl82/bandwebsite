@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '../supabase'
 import TicketButton from './TicketButton'
-import MailchimpSignup from './MailchimpSignup'
 
 export default function ShowsPanel() {
   const [shows, setShows] = useState([])
@@ -93,7 +92,6 @@ export default function ShowsPanel() {
           </div>
         )
       })}
-      <MailchimpSignup />
     </div>
   )
 }

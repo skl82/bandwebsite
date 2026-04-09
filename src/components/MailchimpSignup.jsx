@@ -33,10 +33,7 @@ export default function MailchimpSignup() {
   }
 
   return (
-    <div className="border-t border-white/10 pt-5 mt-5">
-      <p className="font-mono text-xs text-text-muted tracking-widest uppercase mb-3">
-        // stay in the loop
-      </p>
+    <div>
 
       {status === 'success' ? (
         <p className="font-mono text-xs text-accent tracking-wide">

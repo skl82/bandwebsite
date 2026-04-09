@@ -221,8 +221,8 @@ export default function Home() {
           ${openPanel === 'music' ? 'lg:translate-x-full' : 'lg:translate-x-0'}
         `}>
           <div className="lg:relative lg:h-full lg:flex lg:flex-col">
-            <div className="lg:px-6 lg:pt-4 lg:pb-2 bg-bg relative z-10">
-              <h2 className="font-mono text-xl tracking-widest uppercase mb-0 lg:mb-0">// Shows</h2>
+            <div className="hidden lg:block lg:px-6 lg:pt-4 lg:pb-2 bg-bg relative z-10">
+              <h2 className="font-mono text-xl tracking-widest uppercase mb-0">// Shows</h2>
             </div>
             <div className="hidden lg:block absolute top-[2.5rem] left-0 right-0 h-6 bg-gradient-to-b from-bg to-transparent pointer-events-none z-10" />
             <div className="lg:flex-1 lg:overflow-y-auto lg:px-6 lg:pt-2 lg:pb-16">

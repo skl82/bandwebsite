@@ -74,6 +74,30 @@ export default function Admin() {
     fetchShows()
   }
 
+  async function notifySubscribers(show) {
+    if (!window.confirm(`Send email blast for "${show.gig_name}" to all subscribers?`)) return
+    try {
+      const res = await fetch('/api/notify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          gig_name: show.gig_name,
+          date: show.date,
+          time: show.time,
+          doors_time: show.doors_time,
+          venue: show.venue,
+          city: show.city,
+          ticket_link: show.ticket_link,
+          poster_url: show.poster_url,
+        }),
+      })
+      if (!res.ok) throw new Error()
+      alert('Notification sent!')
+    } catch {
+      alert('Failed to send notification. Try again.')
+    }
+  }
+
   async function handleLogout() {
     await supabase.auth.signOut()
   }
@@ -156,6 +180,12 @@ export default function Admin() {
                 }`}
               >
                 {show.visible ? 'Visible' : 'Hidden'}
+              </button>
+              <button
+                onClick={() => notifySubscribers(show)}
+                className="text-xs px-3 py-1.5 rounded bg-accent/10 text-accent hover:bg-accent/20"
+              >
+                Notify
               </button>
               <button
                 onClick={() => handleEdit(show)}

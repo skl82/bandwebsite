@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '../supabase'
 import ShowCard from '../components/ShowCard'
-import MailchimpSignup from '../components/MailchimpSignup'
 
 export default function Shows() {
   const [upcoming, setUpcoming] = useState([])
@@ -34,10 +33,6 @@ export default function Shows() {
         {upcoming.map(show => (
           <ShowCard key={show.id} show={show} />
         ))}
-      </div>
-
-      <div className="mt-10 max-w-md">
-        <MailchimpSignup />
       </div>
 
       {past.length > 0 && (

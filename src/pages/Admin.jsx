@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { Navigate } from 'react-router-dom'
 import { supabase } from '../supabase'
 import ShowForm from '../components/ShowForm'
+import NewsForm from '../components/NewsForm'
 
 const greetings = [
   'Is that THE Araujia?',
@@ -36,9 +37,15 @@ const greeting = greetings[Math.floor(Math.random() * greetings.length)]
 export default function Admin() {
   const [session, setSession] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [activeTab, setActiveTab] = useState('shows')
   const [shows, setShows] = useState([])
   const [editing, setEditing] = useState(null)
   const [showForm, setShowForm] = useState(false)
+  const [newsForm, setNewsForm] = useState(false)
+  const [mockNews, setMockNews] = useState([
+    { id: 1, title: 'New Single Dropping This Friday', body: 'Pre-save link goes live Wednesday.', image_url: null, link: '', date: '2026-04-04' },
+    { id: 2, title: 'Summer Tour Dates Announced', body: 'Hitting the road this June through August.', image_url: null, link: 'https://example.com/tickets', date: '2026-03-28' },
+  ])
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -135,78 +142,165 @@ export default function Admin() {
         </button>
       </div>
 
-      {showForm ? (
-        <div className="mb-10">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="font-display text-xl tracking-wide">
-              {editing ? 'EDIT SHOW' : 'NEW SHOW'}
-            </h2>
-            <button
-              onClick={() => { setShowForm(false); setEditing(null) }}
-              className="text-text-muted text-sm hover:text-text"
-            >
-              Cancel
-            </button>
-          </div>
-          <ShowForm show={editing} onSaved={handleSaved} />
-        </div>
-      ) : (
+      {/* Tabs */}
+      <div className="flex gap-0 mb-8 border-b border-white/10">
         <button
-          onClick={() => setShowForm(true)}
-          className="mb-8 bg-accent hover:bg-accent-hover text-white font-semibold px-6 py-3 rounded transition-colors"
+          onClick={() => setActiveTab('shows')}
+          className={`px-5 py-3 font-mono text-sm tracking-wider uppercase transition-colors cursor-pointer ${
+            activeTab === 'shows'
+              ? 'text-text border-b-2 border-accent'
+              : 'text-text-muted hover:text-text'
+          }`}
         >
-          + Add Show
+          // Shows
         </button>
+        <button
+          onClick={() => setActiveTab('news')}
+          className={`px-5 py-3 font-mono text-sm tracking-wider uppercase transition-colors cursor-pointer ${
+            activeTab === 'news'
+              ? 'text-text border-b-2 border-accent'
+              : 'text-text-muted hover:text-text'
+          }`}
+        >
+          // News
+        </button>
+      </div>
+
+      {/* Shows tab */}
+      {activeTab === 'shows' && (
+        <>
+          {showForm ? (
+            <div className="mb-10">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="font-display text-xl tracking-wide">
+                  {editing ? 'EDIT SHOW' : 'NEW SHOW'}
+                </h2>
+                <button
+                  onClick={() => { setShowForm(false); setEditing(null) }}
+                  className="text-text-muted text-sm hover:text-text"
+                >
+                  Cancel
+                </button>
+              </div>
+              <ShowForm show={editing} onSaved={handleSaved} />
+            </div>
+          ) : (
+            <button
+              onClick={() => setShowForm(true)}
+              className="mb-8 bg-accent hover:bg-accent-hover text-white font-semibold px-6 py-3 rounded transition-colors"
+            >
+              + Add Show
+            </button>
+          )}
+
+          <div className="space-y-3">
+            {shows.map(show => (
+              <div
+                key={show.id}
+                className="bg-surface rounded-lg p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3"
+              >
+                <div className="min-w-0">
+                  <div className="flex items-center gap-2">
+                    <span className={`w-2 h-2 rounded-full ${show.visible ? 'bg-green-500' : 'bg-text-muted'}`} />
+                    <span className="font-semibold truncate">{show.gig_name}</span>
+                  </div>
+                  <p className="text-text-muted text-sm mt-1">
+                    {new Date(show.date + 'T00:00:00').toLocaleDateString()} &middot; {show.venue}, {show.city}
+                  </p>
+                </div>
+                <div className="flex items-center gap-2 shrink-0">
+                  <button
+                    onClick={() => toggleVisible(show.id, show.visible)}
+                    className={`text-xs px-3 py-1.5 rounded ${
+                      show.visible
+                        ? 'bg-green-900/30 text-green-400'
+                        : 'bg-white/5 text-text-muted'
+                    }`}
+                  >
+                    {show.visible ? 'Visible' : 'Hidden'}
+                  </button>
+                  <button
+                    onClick={() => notifySubscribers(show)}
+                    className="text-xs px-3 py-1.5 rounded bg-accent/10 text-accent hover:bg-accent/20"
+                  >
+                    Notify
+                  </button>
+                  <button
+                    onClick={() => handleEdit(show)}
+                    className="text-xs px-3 py-1.5 rounded bg-white/5 text-text-muted hover:text-text"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => deleteShow(show.id)}
+                    className="text-xs px-3 py-1.5 rounded bg-white/5 text-red-400 hover:text-red-300"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </>
       )}
 
-      <div className="space-y-3">
-        {shows.map(show => (
-          <div
-            key={show.id}
-            className="bg-surface rounded-lg p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3"
-          >
-            <div className="min-w-0">
-              <div className="flex items-center gap-2">
-                <span className={`w-2 h-2 rounded-full ${show.visible ? 'bg-green-500' : 'bg-text-muted'}`} />
-                <span className="font-semibold truncate">{show.gig_name}</span>
+      {/* News tab */}
+      {activeTab === 'news' && (
+        <>
+          {newsForm ? (
+            <div className="mb-10">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="font-display text-xl tracking-wide">NEW ARTICLE</h2>
+                <button
+                  onClick={() => setNewsForm(false)}
+                  className="text-text-muted text-sm hover:text-text"
+                >
+                  Cancel
+                </button>
               </div>
-              <p className="text-text-muted text-sm mt-1">
-                {new Date(show.date + 'T00:00:00').toLocaleDateString()} &middot; {show.venue}, {show.city}
-              </p>
+              <NewsForm onSaved={() => setNewsForm(false)} />
             </div>
-            <div className="flex items-center gap-2 shrink-0">
-              <button
-                onClick={() => toggleVisible(show.id, show.visible)}
-                className={`text-xs px-3 py-1.5 rounded ${
-                  show.visible
-                    ? 'bg-green-900/30 text-green-400'
-                    : 'bg-white/5 text-text-muted'
-                }`}
+          ) : (
+            <button
+              onClick={() => setNewsForm(true)}
+              className="mb-8 bg-accent hover:bg-accent-hover text-white font-semibold px-6 py-3 rounded transition-colors"
+            >
+              + Add Article
+            </button>
+          )}
+
+          <div className="space-y-3">
+            {mockNews.map(article => (
+              <div
+                key={article.id}
+                className="bg-surface rounded-lg p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3"
               >
-                {show.visible ? 'Visible' : 'Hidden'}
-              </button>
-              <button
-                onClick={() => notifySubscribers(show)}
-                className="text-xs px-3 py-1.5 rounded bg-accent/10 text-accent hover:bg-accent/20"
-              >
-                Notify
-              </button>
-              <button
-                onClick={() => handleEdit(show)}
-                className="text-xs px-3 py-1.5 rounded bg-white/5 text-text-muted hover:text-text"
-              >
-                Edit
-              </button>
-              <button
-                onClick={() => deleteShow(show.id)}
-                className="text-xs px-3 py-1.5 rounded bg-white/5 text-red-400 hover:text-red-300"
-              >
-                Delete
-              </button>
-            </div>
+                <div className="min-w-0">
+                  <span className="font-semibold truncate block">{article.title}</span>
+                  <p className="text-text-muted text-sm mt-1">
+                    {new Date(article.date + 'T00:00:00').toLocaleDateString()}
+                    {article.link && <> &middot; <span className="text-accent">has link</span></>}
+                  </p>
+                </div>
+                <div className="flex items-center gap-2 shrink-0">
+                  <button
+                    className="text-xs px-3 py-1.5 rounded bg-white/5 text-text-muted hover:text-text"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => setMockNews(mockNews.filter(a => a.id !== article.id))}
+                    className="text-xs px-3 py-1.5 rounded bg-white/5 text-red-400 hover:text-red-300"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            ))}
+
           </div>
-        ))}
-      </div>
+        </>
+      )}
     </div>
   )
 }

@@ -40,12 +40,15 @@ function formatDate(dateStr) {
   return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
 }
 
-export default function NewsPanel() {
+export default function NewsPanel({ mobileLimit = false }) {
   const [expanded, setExpanded] = useState(null)
+  const [showAll, setShowAll] = useState(false)
+
+  const articles = (mobileLimit && !showAll) ? MOCK_NEWS.slice(0, 2) : MOCK_NEWS
 
   return (
     <div className="space-y-6">
-      {MOCK_NEWS.map((article) => (
+      {articles.map((article) => (
         <article
           key={article.id}
           className="border border-white/10 rounded-lg overflow-hidden hover:border-white/20 transition-colors"
@@ -77,6 +80,14 @@ export default function NewsPanel() {
           </div>
         </article>
       ))}
+      {mobileLimit && MOCK_NEWS.length > 2 && (
+        <button
+          onClick={() => setShowAll(!showAll)}
+          className="w-full py-3 font-mono text-sm text-text-muted hover:text-text border border-white/10 rounded-lg cursor-pointer transition-colors"
+        >
+          {showAll ? '[see less]' : '[see more]'}
+        </button>
+      )}
     </div>
   )
 }

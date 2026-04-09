@@ -274,7 +274,7 @@ export default function Home() {
         {/* News tile — mobile only, below music */}
         <div className="lg:hidden relative mx-4 mt-6 rounded-lg bg-bg/95 backdrop-blur-sm border border-white/10 p-4 z-10 fade-in fade-in-delay-5">
           <h2 className="font-mono text-xl tracking-widest uppercase mb-4">// News</h2>
-          <NewsPanel />
+          <NewsPanel mobileLimit />
         </div>
 
         {/* Black backdrop below tiles — mobile only */}

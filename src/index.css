@@ -17,6 +17,18 @@ html {
   scroll-behavior: smooth;
 }
 
+@media (min-width: 1024px) {
+  html {
+    overflow: hidden;
+    height: 100%;
+  }
+  body {
+    overflow: hidden;
+    height: 100%;
+    overscroll-behavior: none;
+  }
+}
+
 body {
   font-family: var(--font-body);
   background-color: var(--color-bg);

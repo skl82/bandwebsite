@@ -1,8 +1,34 @@
 import mailchimp from '@mailchimp/mailchimp_marketing'
+import { createClient } from '@supabase/supabase-js'
+
+function escapeHtml(str) {
+  if (!str) return ''
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
+}
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' })
+  }
+
+  // Verify the caller is an authenticated Supabase user
+  const token = req.headers.authorization?.replace('Bearer ', '')
+  if (!token) {
+    return res.status(401).json({ error: 'Unauthorized' })
+  }
+
+  const supabase = createClient(
+    process.env.VITE_SUPABASE_URL,
+    process.env.VITE_SUPABASE_ANON_KEY,
+  )
+  const { data: { user }, error: authError } = await supabase.auth.getUser(token)
+  if (authError || !user) {
+    return res.status(401).json({ error: 'Unauthorized' })
   }
 
   const { gig_name, date, time, doors_time, venue, city, ticket_link, poster_url } = req.body || {}
@@ -39,15 +65,21 @@ export default async function handler(req, res) {
       ? `Show: ${showTime}`
       : ''
 
+  const safeGigName = escapeHtml(gig_name)
+  const safeVenue = escapeHtml(venue)
+  const safeCity = escapeHtml(city)
+  const safePosterUrl = escapeHtml(poster_url)
+  const safeTicketLink = escapeHtml(ticket_link)
+
   const posterBlock = poster_url
     ? `<tr><td align="center" style="padding-bottom: 24px;">
-        <img src="${poster_url}" alt="${gig_name}" width="400" style="max-width: 100%; height: auto; border-radius: 4px;" />
+        <img src="${safePosterUrl}" alt="${safeGigName}" width="400" style="max-width: 100%; height: auto; border-radius: 4px;" />
       </td></tr>`
     : ''
 
   const ticketBlock = ticket_link
     ? `<tr><td align="center" style="padding-top: 32px; padding-bottom: 40px;">
-        <a href="${ticket_link}" style="font-family: 'Space Mono', 'Courier New', monospace; font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: #f1f1f1; border: 1px solid #e63946; padding: 12px 24px; text-decoration: none; display: inline-block;">[ Get Tickets ]</a>
+        <a href="${safeTicketLink}" style="font-family: 'Space Mono', 'Courier New', monospace; font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: #f1f1f1; border: 1px solid #e63946; padding: 12px 24px; text-decoration: none; display: inline-block;">[ Get Tickets ]</a>
       </td></tr>`
     : ''
 
@@ -81,14 +113,14 @@ export default async function handler(req, res) {
         </td></tr>
         ${posterBlock}
         <tr><td style="padding-bottom: 8px; background-color: #0a0a0a;">
-          <h1 style="font-family: 'Bebas Neue', Arial, sans-serif; font-size: 36px; letter-spacing: 3px; color: #f1f1f1; margin: 0;">${gig_name}</h1>
+          <h1 style="font-family: 'Bebas Neue', Arial, sans-serif; font-size: 36px; letter-spacing: 3px; color: #f1f1f1; margin: 0;">${safeGigName}</h1>
         </td></tr>
         <tr><td style="padding-bottom: 6px; background-color: #0a0a0a;">
           <p style="font-family: 'Space Mono', 'Courier New', monospace; font-size: 13px; color: #f1f1f1; margin: 0;">${formatted}</p>
         </td></tr>
         ${timeLine ? `<tr><td style="padding-bottom: 6px; background-color: #0a0a0a;"><p style="font-family: 'Space Mono', 'Courier New', monospace; font-size: 12px; color: #888888; margin: 0;">${timeLine}</p></td></tr>` : ''}
         <tr><td style="padding-bottom: 6px; background-color: #0a0a0a;">
-          <p style="font-family: 'Space Mono', 'Courier New', monospace; font-size: 13px; color: #f1f1f1; margin: 0;">${venue} &mdash; ${city}</p>
+          <p style="font-family: 'Space Mono', 'Courier New', monospace; font-size: 13px; color: #f1f1f1; margin: 0;">${safeVenue} &mdash; ${safeCity}</p>
         </td></tr>
         ${ticketBlock}
         <tr><td style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 32px; padding-bottom: 0; margin-top: 40px; background-color: #0a0a0a;">
@@ -113,7 +145,7 @@ export default async function handler(req, res) {
       type: 'regular',
       recipients: { list_id: audienceId },
       settings: {
-        subject_line: `${gig_name} — ${formatted}`,
+        subject_line: `${safeGigName} — ${formatted}`,
         from_name: 'ARAUJIA',
         reply_to: fromEmail,
       },

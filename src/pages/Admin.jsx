@@ -77,9 +77,13 @@ export default function Admin() {
   async function notifySubscribers(show) {
     if (!window.confirm(`Send email blast for "${show.gig_name}" to all subscribers?`)) return
     try {
+      const { data: { session: s } } = await supabase.auth.getSession()
       const res = await fetch('/api/notify', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${s?.access_token}`,
+        },
         body: JSON.stringify({
           gig_name: show.gig_name,
           date: show.date,

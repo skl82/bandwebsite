@@ -6,6 +6,7 @@ import SpotifyEmbed from '../components/SpotifyEmbed'
 import SocialLinks from '../components/SocialLinks'
 import NextShowTicker from '../components/NextShowTicker'
 import MailchimpSignup from '../components/MailchimpSignup'
+import NewsPanel from '../components/NewsPanel'
 
 export default function Home() {
   const [openPanel, setOpenPanel] = useState(null)
@@ -100,7 +101,7 @@ export default function Home() {
   }
 
   // Shift the main content when music panel opens (desktop only)
-  const shift = openPanel === 'music' ? 'lg:translate-x-[33.333%]' : 'translate-x-0'
+  const shift = (openPanel === 'music' || openPanel === 'news') ? 'lg:translate-x-[33.333%]' : 'translate-x-0'
 
   return (
     <div className="h-screen overflow-y-auto lg:overflow-hidden relative">
@@ -122,11 +123,29 @@ export default function Home() {
         </div>
       </div>
 
+      {/* News panel — fixed left, slides in like music */}
+      <div className={`fixed top-0 left-0 h-full w-full lg:w-1/3 z-40 bg-bg transition-transform duration-300 ease-in-out ${
+        openPanel === 'news' ? 'translate-x-0' : '-translate-x-full'
+      }`}>
+        <div className="h-full overflow-y-auto px-4 py-4 lg:px-6 lg:py-8 scrollbar-hide">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="font-mono text-xl tracking-widest uppercase">// News</h2>
+            <button
+              onClick={() => setOpenPanel(null)}
+              className="font-mono text-text-muted hover:text-text text-sm leading-none cursor-pointer"
+            >
+              [close]
+            </button>
+          </div>
+          <NewsPanel />
+        </div>
+      </div>
+
       {/* Desktop carousels — fixed, above shows panel, shift with music */}
-      <div className={`hidden lg:block fixed top-0 left-0 right-0 z-50 fade-in-flat transition-transform duration-300 ease-in-out ${openPanel === 'music' ? 'translate-x-[33.333%]' : 'translate-x-0'}`}>
+      <div className={`hidden lg:block fixed top-0 left-0 right-0 z-50 fade-in-flat transition-transform duration-300 ease-in-out ${(openPanel === 'music' || openPanel === 'news') ? 'translate-x-[33.333%]' : 'translate-x-0'}`}>
         <NextShowTicker />
       </div>
-      <div className={`hidden lg:block fixed bottom-0 left-0 right-0 z-50 fade-in-flat transition-transform duration-300 ease-in-out ${openPanel === 'music' ? 'translate-x-[33.333%]' : 'translate-x-0'}`}>
+      <div className={`hidden lg:block fixed bottom-0 left-0 right-0 z-50 fade-in-flat transition-transform duration-300 ease-in-out ${(openPanel === 'music' || openPanel === 'news') ? 'translate-x-[33.333%]' : 'translate-x-0'}`}>
         <SocialLinks />
       </div>
 
@@ -203,10 +222,19 @@ export default function Home() {
           {/* Side tab: MUSIC — desktop vertical tab */}
           <button
             onClick={() => toggle('music')}
-            className="hidden lg:block absolute left-0 -translate-y-1/2 z-50 bg-bg pl-0 pr-5 py-5 font-mono tracking-tight writing-vertical cursor-pointer hover:bg-surface transition-colors leading-none fade-in fade-in-delay-3"
-            style={{ fontSize: 'min(7.2rem, 9.6vh)', top: 'calc(50% + 5.7rem)' }}
+            className="hidden lg:block absolute left-0 z-50 bg-bg pl-0 pr-3 py-4 font-mono tracking-tight writing-vertical cursor-pointer hover:bg-surface transition-colors leading-none fade-in fade-in-delay-3"
+            style={{ fontSize: 'min(5.5rem, 7.15vh)', top: 'max(14rem, calc(50% - 13rem))' }}
           >
             {'\u00A0'}MUSIC{'\u00A0'}
+          </button>
+
+          {/* Side tab: NEWS — desktop vertical tab, left side below MUSIC */}
+          <button
+            onClick={() => toggle('news')}
+            className="hidden lg:block absolute left-0 z-50 bg-bg pl-0 pr-3 py-4 font-mono tracking-tight writing-vertical cursor-pointer hover:bg-surface transition-colors leading-none fade-in fade-in-delay-4"
+            style={{ fontSize: 'min(5.5rem, 7.15vh)', top: 'max(28rem, calc(50% + 6rem))' }}
+          >
+            {'\u00A0'}NEWS{'\u00A0'}
           </button>
 
           {/* Social links — desktop: bottom */}
@@ -241,6 +269,12 @@ export default function Home() {
         <div className="lg:hidden relative mx-4 mt-6 rounded-lg bg-bg/95 backdrop-blur-sm border border-white/10 p-4 z-10 fade-in fade-in-delay-4">
           <h2 className="font-mono text-xl tracking-widest uppercase mb-4">// Music</h2>
           <SpotifyEmbed height={352} />
+        </div>
+
+        {/* News tile — mobile only, below music */}
+        <div className="lg:hidden relative mx-4 mt-6 rounded-lg bg-bg/95 backdrop-blur-sm border border-white/10 p-4 z-10 fade-in fade-in-delay-5">
+          <h2 className="font-mono text-xl tracking-widest uppercase mb-4">// News</h2>
+          <NewsPanel />
         </div>
 
         {/* Black backdrop below tiles — mobile only */}

@@ -56,35 +56,45 @@ export default async function handler(req, res) {
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono&display=swap');</style>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono&display=swap');
+    :root { color-scheme: dark; supported-color-schemes: dark; }
+    @media (prefers-color-scheme: dark) {
+      body, .body-bg { background-color: #0a0a0a !important; }
+    }
+    u + .body-bg { background-color: #0a0a0a !important; }
+  </style>
+  <meta name="color-scheme" content="dark">
+  <meta name="supported-color-schemes" content="dark">
 </head>
-<body style="margin: 0; padding: 0; background-color: #0a0a0a; color: #f1f1f1;">
+<body class="body-bg" style="margin: 0; padding: 0; background-color: #0a0a0a; color: #f1f1f1;">
+  <div class="body-bg" style="background-color: #0a0a0a;">
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color: #0a0a0a;">
-    <tr><td align="center" style="padding: 40px 20px;">
-      <table role="presentation" width="500" cellpadding="0" cellspacing="0" style="max-width: 500px; width: 100%;">
-        <tr><td align="center" style="padding-bottom: 40px;">
+    <tr><td align="center" style="padding: 40px 20px; background-color: #0a0a0a;">
+      <table role="presentation" width="500" cellpadding="0" cellspacing="0" style="max-width: 500px; width: 100%; background-color: #0a0a0a;">
+        <tr><td align="center" style="padding-bottom: 40px; background-color: #0a0a0a;">
           <img src="https://araujiaband.com/araujialogo.png" alt="Araujia" width="200" style="max-width: 200px; height: auto;" />
         </td></tr>
-        <tr><td style="border-top: 1px solid rgba(255,255,255,0.1); padding-bottom: 40px;"></td></tr>
-        <tr><td style="padding-bottom: 24px;">
+        <tr><td style="border-top: 1px solid rgba(255,255,255,0.1); padding-bottom: 40px; background-color: #0a0a0a;"></td></tr>
+        <tr><td style="padding-bottom: 24px; background-color: #0a0a0a;">
           <p style="font-family: 'Space Mono', 'Courier New', monospace; font-size: 11px; letter-spacing: 2px; color: #888888; text-transform: uppercase; margin: 0;">// new show announced</p>
         </td></tr>
         ${posterBlock}
-        <tr><td style="padding-bottom: 8px;">
+        <tr><td style="padding-bottom: 8px; background-color: #0a0a0a;">
           <h1 style="font-family: 'Bebas Neue', Arial, sans-serif; font-size: 36px; letter-spacing: 3px; color: #f1f1f1; margin: 0;">${gig_name}</h1>
         </td></tr>
-        <tr><td style="padding-bottom: 6px;">
+        <tr><td style="padding-bottom: 6px; background-color: #0a0a0a;">
           <p style="font-family: 'Space Mono', 'Courier New', monospace; font-size: 13px; color: #f1f1f1; margin: 0;">${formatted}</p>
         </td></tr>
-        ${timeLine ? `<tr><td style="padding-bottom: 6px;"><p style="font-family: 'Space Mono', 'Courier New', monospace; font-size: 12px; color: #888888; margin: 0;">${timeLine}</p></td></tr>` : ''}
-        <tr><td style="padding-bottom: 6px;">
+        ${timeLine ? `<tr><td style="padding-bottom: 6px; background-color: #0a0a0a;"><p style="font-family: 'Space Mono', 'Courier New', monospace; font-size: 12px; color: #888888; margin: 0;">${timeLine}</p></td></tr>` : ''}
+        <tr><td style="padding-bottom: 6px; background-color: #0a0a0a;">
           <p style="font-family: 'Space Mono', 'Courier New', monospace; font-size: 13px; color: #f1f1f1; margin: 0;">${venue} &mdash; ${city}</p>
         </td></tr>
         ${ticketBlock}
-        <tr><td style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 32px; padding-bottom: 0; margin-top: 40px;">
+        <tr><td style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 32px; padding-bottom: 0; margin-top: 40px; background-color: #0a0a0a;">
           <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td style="padding-top: 8px;"></td></tr></table>
         </td></tr>
-        <tr><td align="center">
+        <tr><td align="center" style="background-color: #0a0a0a;">
           <p style="font-family: 'Space Mono', 'Courier New', monospace; font-size: 10px; color: #888888; letter-spacing: 1px; margin: 0 0 16px 0;">ARAUJIA &mdash; *|CURRENT_YEAR|*</p>
           <p style="font-family: 'Space Mono', 'Courier New', monospace; font-size: 10px; color: #888888; margin: 0;">
             <a href="*|UNSUB|*" style="color: #888888; text-decoration: underline;">unsubscribe</a>
@@ -93,6 +103,7 @@ export default async function handler(req, res) {
       </table>
     </td></tr>
   </table>
+  </div>
 </body>
 </html>`
 
@@ -103,7 +114,7 @@ export default async function handler(req, res) {
       recipients: { list_id: audienceId },
       settings: {
         subject_line: `${gig_name} — ${formatted}`,
-        from_name: 'Araujia',
+        from_name: 'ARAUJIA',
         reply_to: fromEmail,
       },
     })

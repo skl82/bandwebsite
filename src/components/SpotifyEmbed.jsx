@@ -8,7 +8,7 @@ export default function SpotifyEmbed({ uri = 'album/17uvr925n9F4KgUBsHJIhj', hei
       height={height}
       frameBorder="0"
       allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-      loading="lazy"
+      loading="eager"
       className="rounded-lg"
     />
   )

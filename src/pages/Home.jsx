@@ -246,7 +246,7 @@ export default function Home() {
           lg:fixed lg:top-14 lg:bottom-14 lg:right-4 lg:h-auto lg:w-1/3 lg:z-40 lg:bg-bg lg:backdrop-blur-none lg:border-0 lg:rounded-none lg:m-0 lg:p-0
           lg:transition-transform lg:duration-300 lg:ease-in-out
           fade-in fade-in-delay-3
-          ${openPanel === 'music' ? 'lg:translate-x-full' : 'lg:translate-x-0'}
+          ${(openPanel === 'music' || openPanel === 'news') ? 'lg:translate-x-full' : 'lg:translate-x-0'}
         `}>
           <div className="lg:relative lg:h-full lg:flex lg:flex-col">
             <div className="hidden lg:block lg:px-6 lg:pt-4 lg:pb-2 bg-bg relative z-10">

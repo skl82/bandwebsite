@@ -222,24 +222,30 @@ export default function Admin() {
               >
                 <div className="min-w-0">
                   <div className="flex items-center gap-2">
-                    <span className={`w-2 h-2 rounded-full ${show.visible ? 'bg-green-500' : 'bg-text-muted'}`} />
-                    <span className="font-semibold truncate">{show.gig_name}</span>
+                    <span className={`w-2 h-2 rounded-full ${new Date(show.date + 'T00:00:00') < new Date(new Date().toDateString()) ? 'bg-text-muted' : show.visible ? 'bg-green-500' : 'bg-text-muted'}`} />
+                    <span className={`font-semibold truncate ${new Date(show.date + 'T00:00:00') < new Date(new Date().toDateString()) ? 'text-text-muted line-through' : ''}`}>{show.gig_name}</span>
                   </div>
                   <p className="text-text-muted text-sm mt-1">
                     {new Date(show.date + 'T00:00:00').toLocaleDateString()} &middot; {show.venue}, {show.city}
                   </p>
                 </div>
                 <div className="flex items-center gap-2 shrink-0">
-                  <button
-                    onClick={() => toggleVisible(show.id, show.visible)}
-                    className={`text-xs px-3 py-1.5 rounded ${
-                      show.visible
-                        ? 'bg-green-900/30 text-green-400'
-                        : 'bg-white/5 text-text-muted'
-                    }`}
-                  >
-                    {show.visible ? 'Visible' : 'Hidden'}
-                  </button>
+                  {new Date(show.date + 'T00:00:00') < new Date(new Date().toDateString()) ? (
+                    <span className="text-xs px-3 py-1.5 rounded bg-white/5 text-text-muted">
+                      Past
+                    </span>
+                  ) : (
+                    <button
+                      onClick={() => toggleVisible(show.id, show.visible)}
+                      className={`text-xs px-3 py-1.5 rounded ${
+                        show.visible
+                          ? 'bg-green-900/30 text-green-400'
+                          : 'bg-white/5 text-text-muted'
+                      }`}
+                    >
+                      {show.visible ? 'Visible' : 'Hidden'}
+                    </button>
+                  )}
                   <button
                     onClick={() => notifySubscribers(show)}
                     className="text-xs px-3 py-1.5 rounded bg-accent/10 text-accent hover:bg-accent/20"

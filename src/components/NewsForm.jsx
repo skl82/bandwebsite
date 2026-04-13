@@ -4,9 +4,10 @@ import { supabase } from '../supabase'
 export default function NewsForm({ article, onSaved }) {
   const [form, setForm] = useState({
     title: article?.title || '',
-    excerpt: article?.excerpt || '',
+    date: article?.date || new Date().toISOString().split('T')[0],
     body: article?.body || '',
     link: article?.link || '',
+    link_text: article?.link_text || '',
     visible: article?.visible || false,
   })
   const [imageFile, setImageFile] = useState(null)
@@ -57,9 +58,10 @@ export default function NewsForm({ article, onSaved }) {
 
     const payload = {
       title: form.title,
-      excerpt: form.excerpt || null,
+      date: form.date,
       body: form.body,
       link: form.link || null,
+      link_text: form.link_text || null,
       image_url,
       visible: form.visible,
     }
@@ -90,6 +92,14 @@ export default function NewsForm({ article, onSaved }) {
         className={inputCls}
       />
 
+      <input
+        type="date"
+        value={form.date}
+        onChange={e => update('date', e.target.value)}
+        required
+        className={inputCls}
+      />
+
       <div>
         <label className="block text-text-muted text-sm mb-2">Cover Image</label>
         <label className="flex items-center gap-3 cursor-pointer group">
@@ -113,15 +123,6 @@ export default function NewsForm({ article, onSaved }) {
         )}
       </div>
 
-      <input
-        type="text"
-        placeholder="Excerpt (short summary for card view)"
-        value={form.excerpt}
-        onChange={e => update('excerpt', e.target.value)}
-        maxLength={300}
-        className={inputCls}
-      />
-
       <textarea
         placeholder="Body text..."
         value={form.body}
@@ -133,10 +134,19 @@ export default function NewsForm({ article, onSaved }) {
 
       <input
         type="url"
-        placeholder="Link (optional)"
+        placeholder="Link URL (optional)"
         value={form.link}
         onChange={e => update('link', e.target.value)}
         maxLength={500}
+        className={inputCls}
+      />
+
+      <input
+        type="text"
+        placeholder="Link display text (e.g. &quot;buy tickets&quot;) — defaults to &quot;link&quot;"
+        value={form.link_text}
+        onChange={e => update('link_text', e.target.value)}
+        maxLength={100}
         className={inputCls}
       />
 

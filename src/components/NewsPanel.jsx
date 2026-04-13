@@ -14,7 +14,7 @@ export default function NewsPanel({ mobileLimit = false }) {
   useEffect(() => {
     supabase
       .from('news')
-      .select('id, title, excerpt, body, image_url, link, date')
+      .select('id, title, body, image_url, link, link_text, date')
       .eq('visible', true)
       .order('date', { ascending: false })
       .then(({ data }) => setArticles(data || []))
@@ -47,9 +47,11 @@ export default function NewsPanel({ mobileLimit = false }) {
               {article.title}
             </h3>
             <p className="text-sm text-text-muted leading-relaxed">
-              {expanded === article.id ? article.body : (article.excerpt || article.body)}
+              {expanded === article.id || article.body.length <= 200
+                ? article.body
+                : article.body.slice(0, 200).trimEnd() + '…'}
             </p>
-            {article.excerpt && (
+            {article.body.length > 200 && (
               <button
                 onClick={() => setExpanded(expanded === article.id ? null : article.id)}
                 className="font-mono text-xs text-accent hover:text-accent-hover cursor-pointer transition-colors"
@@ -64,7 +66,7 @@ export default function NewsPanel({ mobileLimit = false }) {
                 rel="noopener noreferrer"
                 className="block font-mono text-xs text-accent hover:text-accent-hover transition-colors"
               >
-                [link]
+                [{article.link_text || 'link'}]
               </a>
             )}
           </div>

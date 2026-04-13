@@ -39,6 +39,16 @@ export default function NewsForm({ article, onSaved }) {
     let image_url = article?.image_url || null
 
     if (imageFile) {
+      if (!imageFile.type.startsWith('image/')) {
+        setError('Please upload an image file.')
+        setSaving(false)
+        return
+      }
+      if (imageFile.size > 5_000_000) {
+        setError('Image must be under 5 MB.')
+        setSaving(false)
+        return
+      }
       const filename = `${Date.now()}-${imageFile.name.replace(/[^a-zA-Z0-9.-]/g, '_')}`
       const { error: uploadError } = await supabase.storage
         .from('news-images')
@@ -141,6 +151,7 @@ export default function NewsForm({ article, onSaved }) {
         value={form.body}
         onChange={e => update('body', e.target.value)}
         required
+        maxLength={5000}
         rows={6}
         className={inputCls + ' resize-y'}
       />

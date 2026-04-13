@@ -8,6 +8,7 @@ export default function NewsForm({ article, onSaved }) {
     body: article?.body || '',
     link: article?.link || '',
     link_text: article?.link_text || '',
+    image_fit: article?.image_fit || 'cover',
     visible: article?.visible || false,
   })
   const [imageFile, setImageFile] = useState(null)
@@ -63,6 +64,7 @@ export default function NewsForm({ article, onSaved }) {
       link: form.link || null,
       link_text: form.link_text || null,
       image_url,
+      image_fit: form.image_fit,
       visible: form.visible,
     }
 
@@ -121,6 +123,17 @@ export default function NewsForm({ article, onSaved }) {
             className="mt-3 rounded-lg max-h-48 object-cover border border-white/10"
           />
         )}
+        <div className="flex items-center gap-4 mt-2">
+          <span className="text-text-muted text-sm">Image fit:</span>
+          <label className="flex items-center gap-1.5 cursor-pointer">
+            <input type="radio" name="image_fit" value="cover" checked={form.image_fit === 'cover'} onChange={() => update('image_fit', 'cover')} className="accent-accent" />
+            <span className="text-sm">Fill &amp; crop</span>
+          </label>
+          <label className="flex items-center gap-1.5 cursor-pointer">
+            <input type="radio" name="image_fit" value="contain" checked={form.image_fit === 'contain'} onChange={() => update('image_fit', 'contain')} className="accent-accent" />
+            <span className="text-sm">Show full image</span>
+          </label>
+        </div>
       </div>
 
       <textarea

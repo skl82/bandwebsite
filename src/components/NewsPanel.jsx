@@ -14,7 +14,7 @@ export default function NewsPanel({ mobileLimit = false }) {
   useEffect(() => {
     supabase
       .from('news')
-      .select('id, title, body, image_url, link, link_text, date')
+      .select('id, title, body, image_url, image_fit, link, link_text, date')
       .eq('visible', true)
       .order('date', { ascending: false })
       .then(({ data }) => setArticles(data || []))
@@ -34,7 +34,7 @@ export default function NewsPanel({ mobileLimit = false }) {
               <img
                 src={article.image_url}
                 alt={article.title}
-                className="w-full h-full object-cover opacity-80 hover:opacity-100 transition-opacity duration-300"
+                className={`w-full h-full opacity-80 hover:opacity-100 transition-opacity duration-300 ${article.image_fit === 'contain' ? 'object-contain' : 'object-cover'}`}
               />
             </div>
           )}

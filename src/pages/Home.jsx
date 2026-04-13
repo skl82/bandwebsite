@@ -219,23 +219,23 @@ export default function Home() {
             </div>
           )}
 
-          {/* Side tab: MUSIC — desktop vertical tab */}
-          <button
-            onClick={() => toggle('music')}
-            className="hidden lg:block absolute left-0 z-50 bg-bg pl-0 pr-3 py-4 font-mono tracking-tight writing-vertical cursor-pointer hover:bg-surface transition-colors leading-none fade-in fade-in-delay-3"
-            style={{ fontSize: 'min(5.5rem, 7.15vh)', top: 'max(14rem, calc(50% - 13rem))' }}
-          >
-            {'\u00A0'}MUSIC{'\u00A0'}
-          </button>
-
-          {/* Side tab: NEWS — desktop vertical tab, left side below MUSIC */}
-          <button
-            onClick={() => toggle('news')}
-            className="hidden lg:block absolute left-0 z-50 bg-bg pl-0 pr-3 py-4 font-mono tracking-tight writing-vertical cursor-pointer hover:bg-surface transition-colors leading-none fade-in fade-in-delay-4"
-            style={{ fontSize: 'min(5.5rem, 7.15vh)', top: 'max(28rem, calc(50% + 6rem))' }}
-          >
-            {'\u00A0'}NEWS{'\u00A0'}
-          </button>
+          {/* Side tabs — MUSIC & NEWS, flex column between logo and social bar */}
+          <div className="hidden lg:flex absolute left-0 top-[13rem] bottom-[3rem] z-50 flex-col justify-center gap-[2vh] fade-in fade-in-delay-3">
+            <button
+              onClick={() => toggle('music')}
+              className="bg-bg pl-0 pr-3 py-4 font-mono tracking-tight writing-vertical cursor-pointer hover:bg-surface transition-colors leading-none"
+              style={{ fontSize: 'min(5.5rem, 7.15vh)' }}
+            >
+              {'\u00A0'}MUSIC{'\u00A0'}
+            </button>
+            <button
+              onClick={() => toggle('news')}
+              className="bg-bg pl-0 pr-3 py-4 font-mono tracking-tight writing-vertical cursor-pointer hover:bg-surface transition-colors leading-none"
+              style={{ fontSize: 'min(5.5rem, 7.15vh)' }}
+            >
+              {'\u00A0'}NEWS{'\u00A0'}
+            </button>
+          </div>
 
           {/* Social links — desktop: bottom */}
         </div>

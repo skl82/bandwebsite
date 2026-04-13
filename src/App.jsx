@@ -8,9 +8,9 @@ export default function App() {
   const isHome = useLocation().pathname === '/'
 
   return (
-    <div className={`min-h-screen flex flex-col bg-bg text-text ${isHome ? 'h-screen overflow-hidden' : ''}`}>
+    <div className={`h-screen flex flex-col bg-bg text-text ${isHome ? 'overflow-hidden' : ''}`}>
       {!isHome && <Navbar />}
-      <main className="flex-1">
+      <main className="flex-1 min-h-0">
         <Outlet />
       </main>
       {!isHome && <Footer />}

@@ -148,8 +148,8 @@ export default function Admin() {
   if (!session) return <Navigate to="/login" replace />
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-12 pb-24">
-      <div className="flex items-center justify-between mb-8">
+    <div className="h-full flex flex-col max-w-4xl mx-auto px-4">
+      <div className="flex items-center justify-between pt-12 pb-8 shrink-0">
         <div>
           <h1 className="font-display text-3xl tracking-wide">ADMIN</h1>
           <p className="text-text-muted text-sm font-mono mt-1">{greeting}</p>
@@ -163,7 +163,7 @@ export default function Admin() {
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-0 mb-8 border-b border-white/10">
+      <div className="flex gap-0 border-b border-white/10 shrink-0">
         <button
           onClick={() => setActiveTab('shows')}
           className={`px-5 py-3 font-mono text-sm tracking-wider uppercase transition-colors cursor-pointer ${
@@ -186,6 +186,7 @@ export default function Admin() {
         </button>
       </div>
 
+      <div className="flex-1 overflow-y-auto pt-8 pb-24">
       {/* Shows tab */}
       {activeTab === 'shows' && (
         <>
@@ -336,6 +337,7 @@ export default function Admin() {
           </div>
         </>
       )}
+      </div>
     </div>
   )
 }

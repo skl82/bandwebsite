@@ -1,13 +1,18 @@
 import { useState } from 'react'
+import { supabase } from '../supabase'
 
 export default function NewsForm({ article, onSaved }) {
   const [form, setForm] = useState({
     title: article?.title || '',
+    excerpt: article?.excerpt || '',
     body: article?.body || '',
     link: article?.link || '',
+    visible: article?.visible || false,
   })
   const [imageFile, setImageFile] = useState(null)
   const [imagePreview, setImagePreview] = useState(article?.image_url || null)
+  const [saving, setSaving] = useState(false)
+  const [error, setError] = useState(null)
 
   function update(field, value) {
     setForm(prev => ({ ...prev, [field]: value }))
@@ -24,10 +29,50 @@ export default function NewsForm({ article, onSaved }) {
     }
   }
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault()
-    // No backend wiring yet — just log and call onSaved
-    console.log('News article submitted:', { ...form, imageFile })
+    setSaving(true)
+    setError(null)
+
+    let image_url = article?.image_url || null
+
+    if (imageFile) {
+      const filename = `${Date.now()}-${imageFile.name.replace(/[^a-zA-Z0-9.-]/g, '_')}`
+      const { error: uploadError } = await supabase.storage
+        .from('news-images')
+        .upload(filename, imageFile)
+
+      if (uploadError) {
+        setError('Something went wrong. Please try again.')
+        setSaving(false)
+        return
+      }
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('news-images')
+        .getPublicUrl(filename)
+
+      image_url = publicUrl
+    }
+
+    const payload = {
+      title: form.title,
+      excerpt: form.excerpt || null,
+      body: form.body,
+      link: form.link || null,
+      image_url,
+      visible: form.visible,
+    }
+
+    if (article) {
+      const { error } = await supabase.from('news').update(payload).eq('id', article.id)
+      if (error) { setError('Something went wrong. Please try again.'); setSaving(false); return }
+    } else {
+      const { error } = await supabase.from('news').insert(payload)
+      if (error) { setError('Something went wrong. Please try again.'); setSaving(false); return }
+    }
+
+    setSaving(false)
     onSaved()
   }
 
@@ -68,6 +113,15 @@ export default function NewsForm({ article, onSaved }) {
         )}
       </div>
 
+      <input
+        type="text"
+        placeholder="Excerpt (short summary for card view)"
+        value={form.excerpt}
+        onChange={e => update('excerpt', e.target.value)}
+        maxLength={300}
+        className={inputCls}
+      />
+
       <textarea
         placeholder="Body text..."
         value={form.body}
@@ -86,11 +140,23 @@ export default function NewsForm({ article, onSaved }) {
         className={inputCls}
       />
 
+      <label className="flex items-center gap-3 cursor-pointer">
+        <input
+          type="checkbox"
+          checked={form.visible}
+          onChange={e => update('visible', e.target.checked)}
+          className="w-4 h-4 accent-accent"
+        />
+        <span className="text-sm">Visible (publish to site)</span>
+      </label>
+
+      {error && <p className="text-accent text-sm">{error}</p>}
       <button
         type="submit"
-        className="bg-accent hover:bg-accent-hover text-white font-semibold px-6 py-3 rounded transition-colors"
+        disabled={saving}
+        className="bg-accent hover:bg-accent-hover text-white font-semibold px-6 py-3 rounded transition-colors disabled:opacity-50"
       >
-        {article ? 'Update Article' : 'Create Article'}
+        {saving ? 'Saving...' : article ? 'Update Article' : 'Create Article'}
       </button>
     </form>
   )

@@ -42,10 +42,8 @@ export default function Admin() {
   const [editing, setEditing] = useState(null)
   const [showForm, setShowForm] = useState(false)
   const [newsForm, setNewsForm] = useState(false)
-  const [mockNews, setMockNews] = useState([
-    { id: 1, title: 'New Single Dropping This Friday', body: 'Pre-save link goes live Wednesday.', image_url: null, link: '', date: '2026-04-04' },
-    { id: 2, title: 'Summer Tour Dates Announced', body: 'Hitting the road this June through August.', image_url: null, link: 'https://example.com/tickets', date: '2026-03-28' },
-  ])
+  const [news, setNews] = useState([])
+  const [editingNews, setEditingNews] = useState(null)
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -59,7 +57,10 @@ export default function Admin() {
   }, [])
 
   useEffect(() => {
-    if (session) fetchShows()
+    if (session) {
+      fetchShows()
+      fetchNews()
+    }
   }, [session])
 
   async function fetchShows() {
@@ -68,6 +69,25 @@ export default function Admin() {
       .select('*')
       .order('date', { ascending: false })
     setShows(data || [])
+  }
+
+  async function fetchNews() {
+    const { data } = await supabase
+      .from('news')
+      .select('*')
+      .order('date', { ascending: false })
+    setNews(data || [])
+  }
+
+  async function toggleNewsVisible(id, visible) {
+    await supabase.from('news').update({ visible: !visible }).eq('id', id)
+    fetchNews()
+  }
+
+  async function deleteNews(id) {
+    if (!window.confirm('Delete this article?')) return
+    await supabase.from('news').delete().eq('id', id)
+    fetchNews()
   }
 
   async function toggleVisible(id, visible) {
@@ -250,15 +270,17 @@ export default function Admin() {
           {newsForm ? (
             <div className="mb-10">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="font-display text-xl tracking-wide">NEW ARTICLE</h2>
+                <h2 className="font-display text-xl tracking-wide">
+                  {editingNews ? 'EDIT ARTICLE' : 'NEW ARTICLE'}
+                </h2>
                 <button
-                  onClick={() => setNewsForm(false)}
+                  onClick={() => { setNewsForm(false); setEditingNews(null) }}
                   className="text-text-muted text-sm hover:text-text"
                 >
                   Cancel
                 </button>
               </div>
-              <NewsForm onSaved={() => setNewsForm(false)} />
+              <NewsForm article={editingNews} onSaved={() => { setNewsForm(false); setEditingNews(null); fetchNews() }} />
             </div>
           ) : (
             <button
@@ -270,13 +292,16 @@ export default function Admin() {
           )}
 
           <div className="space-y-3">
-            {mockNews.map(article => (
+            {news.map(article => (
               <div
                 key={article.id}
                 className="bg-surface rounded-lg p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3"
               >
                 <div className="min-w-0">
-                  <span className="font-semibold truncate block">{article.title}</span>
+                  <div className="flex items-center gap-2">
+                    <span className={`w-2 h-2 rounded-full ${article.visible ? 'bg-green-500' : 'bg-text-muted'}`} />
+                    <span className="font-semibold truncate">{article.title}</span>
+                  </div>
                   <p className="text-text-muted text-sm mt-1">
                     {new Date(article.date + 'T00:00:00').toLocaleDateString()}
                     {article.link && <> &middot; <span className="text-accent">has link</span></>}
@@ -284,12 +309,23 @@ export default function Admin() {
                 </div>
                 <div className="flex items-center gap-2 shrink-0">
                   <button
+                    onClick={() => toggleNewsVisible(article.id, article.visible)}
+                    className={`text-xs px-3 py-1.5 rounded ${
+                      article.visible
+                        ? 'bg-green-900/30 text-green-400'
+                        : 'bg-white/5 text-text-muted'
+                    }`}
+                  >
+                    {article.visible ? 'Visible' : 'Hidden'}
+                  </button>
+                  <button
+                    onClick={() => { setEditingNews(article); setNewsForm(true) }}
                     className="text-xs px-3 py-1.5 rounded bg-white/5 text-text-muted hover:text-text"
                   >
                     Edit
                   </button>
                   <button
-                    onClick={() => setMockNews(mockNews.filter(a => a.id !== article.id))}
+                    onClick={() => deleteNews(article.id)}
                     className="text-xs px-3 py-1.5 rounded bg-white/5 text-red-400 hover:text-red-300"
                   >
                     Delete
@@ -297,7 +333,6 @@ export default function Admin() {
                 </div>
               </div>
             ))}
-
           </div>
         </>
       )}

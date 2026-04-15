@@ -13,6 +13,7 @@ export default function ShowForm({ show, onSaved }) {
     visible: show?.visible || false,
   })
   const [lineup, setLineup] = useState(show?.lineup || [])
+  const [notifyList, setNotifyList] = useState(!show)
   const [posterFile, setPosterFile] = useState(null)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState(null)
@@ -65,7 +66,7 @@ export default function ShowForm({ show, onSaved }) {
     }
 
     setSaving(false)
-    onSaved()
+    onSaved({ notify: notifyList, showData: payload })
   }
 
   const inputCls = 'w-full bg-bg border border-white/10 rounded px-4 py-3 text-text text-sm focus:outline-none focus:border-accent'
@@ -196,6 +197,15 @@ export default function ShowForm({ show, onSaved }) {
           className="w-4 h-4 accent-accent"
         />
         <span className="text-sm">Visible (publish to site)</span>
+      </label>
+      <label className="flex items-center gap-3 cursor-pointer">
+        <input
+          type="checkbox"
+          checked={notifyList}
+          onChange={e => setNotifyList(e.target.checked)}
+          className="w-4 h-4 accent-accent"
+        />
+        <span className="text-sm">Notify mailing list <span className="text-text-muted text-xs">(on by default for new shows, only check again when editing if you'd like to resend another email)</span></span>
       </label>
       {error && <p className="text-accent text-sm">{error}</p>}
       <button

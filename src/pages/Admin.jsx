@@ -90,20 +90,12 @@ export default function Admin() {
     fetchNews()
   }
 
-  async function toggleVisible(show) {
-    const makingVisible = !show.visible
-    if (makingVisible) {
-      const notify = window.confirm(`Make "${show.gig_name}" visible and notify subscribers?`)
-      await supabase.from('shows').update({ visible: true }).eq('id', show.id)
-      fetchShows()
-      if (notify) await sendNotification(show)
-    } else {
-      await supabase.from('shows').update({ visible: false }).eq('id', show.id)
-      fetchShows()
-    }
+  async function toggleVisible(id, visible) {
+    await supabase.from('shows').update({ visible: !visible }).eq('id', id)
+    fetchShows()
   }
 
-  async function sendNotification(show) {
+  async function sendNotification(showData) {
     try {
       const { data: { session: s } } = await supabase.auth.getSession()
       const res = await fetch('/api/notify', {
@@ -113,14 +105,14 @@ export default function Admin() {
           'Authorization': `Bearer ${s?.access_token}`,
         },
         body: JSON.stringify({
-          gig_name: show.gig_name,
-          date: show.date,
-          time: show.time,
-          doors_time: show.doors_time,
-          venue: show.venue,
-          city: show.city,
-          ticket_link: show.ticket_link,
-          poster_url: show.poster_url,
+          gig_name: showData.gig_name,
+          date: showData.date,
+          time: showData.time,
+          doors_time: showData.doors_time,
+          venue: showData.venue,
+          city: showData.city,
+          ticket_link: showData.ticket_link,
+          poster_url: showData.poster_url,
         }),
       })
       if (!res.ok) throw new Error()
@@ -136,19 +128,17 @@ export default function Admin() {
     fetchShows()
   }
 
-  async function notifySubscribers(show) {
-    if (!window.confirm(`Send email blast for "${show.gig_name}" to all subscribers?`)) return
-    await sendNotification(show)
-  }
-
   async function handleLogout() {
     await supabase.auth.signOut()
   }
 
-  function handleSaved() {
+  async function handleSaved({ notify, showData } = {}) {
     setShowForm(false)
     setEditing(null)
     fetchShows()
+    if (notify && showData) {
+      await sendNotification(showData)
+    }
   }
 
   function handleEdit(show) {
@@ -198,7 +188,7 @@ export default function Admin() {
         </button>
       </div>
 
-      <div className="flex-1 overflow-y-auto pt-8 pb-24">
+      <div className="flex-1 overflow-y-auto scrollbar-hide pt-8 pb-24">
       {/* Shows tab */}
       {activeTab === 'shows' && (
         <>
@@ -219,7 +209,7 @@ export default function Admin() {
             </div>
           ) : (
             <button
-              onClick={() => setShowForm(true)}
+              onClick={() => { setShowForm(true); window.scrollTo({ top: 0, behavior: 'smooth' }) }}
               className="mb-8 bg-accent hover:bg-accent-hover text-white font-semibold px-6 py-3 rounded transition-colors"
             >
               + Add Show
@@ -248,7 +238,7 @@ export default function Admin() {
                     </span>
                   ) : (
                     <button
-                      onClick={() => toggleVisible(show)}
+                      onClick={() => toggleVisible(show.id, show.visible)}
                       className={`text-xs px-3 py-1.5 rounded ${
                         show.visible
                           ? 'bg-green-900/30 text-green-400'
@@ -258,12 +248,6 @@ export default function Admin() {
                       {show.visible ? 'Visible' : 'Hidden'}
                     </button>
                   )}
-                  <button
-                    onClick={() => notifySubscribers(show)}
-                    className="text-xs px-3 py-1.5 rounded bg-accent/10 text-accent hover:bg-accent/20"
-                  >
-                    Notify
-                  </button>
                   <button
                     onClick={() => handleEdit(show)}
                     className="text-xs px-3 py-1.5 rounded bg-white/5 text-text-muted hover:text-text"

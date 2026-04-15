@@ -90,19 +90,20 @@ export default function Admin() {
     fetchNews()
   }
 
-  async function toggleVisible(id, visible) {
-    await supabase.from('shows').update({ visible: !visible }).eq('id', id)
-    fetchShows()
+  async function toggleVisible(show) {
+    const makingVisible = !show.visible
+    if (makingVisible) {
+      const notify = window.confirm(`Make "${show.gig_name}" visible and notify subscribers?`)
+      await supabase.from('shows').update({ visible: true }).eq('id', show.id)
+      fetchShows()
+      if (notify) await sendNotification(show)
+    } else {
+      await supabase.from('shows').update({ visible: false }).eq('id', show.id)
+      fetchShows()
+    }
   }
 
-  async function deleteShow(id) {
-    if (!window.confirm('Delete this show?')) return
-    await supabase.from('shows').delete().eq('id', id)
-    fetchShows()
-  }
-
-  async function notifySubscribers(show) {
-    if (!window.confirm(`Send email blast for "${show.gig_name}" to all subscribers?`)) return
+  async function sendNotification(show) {
     try {
       const { data: { session: s } } = await supabase.auth.getSession()
       const res = await fetch('/api/notify', {
@@ -127,6 +128,17 @@ export default function Admin() {
     } catch {
       alert('Failed to send notification. Try again.')
     }
+  }
+
+  async function deleteShow(id) {
+    if (!window.confirm('Delete this show?')) return
+    await supabase.from('shows').delete().eq('id', id)
+    fetchShows()
+  }
+
+  async function notifySubscribers(show) {
+    if (!window.confirm(`Send email blast for "${show.gig_name}" to all subscribers?`)) return
+    await sendNotification(show)
   }
 
   async function handleLogout() {
@@ -236,7 +248,7 @@ export default function Admin() {
                     </span>
                   ) : (
                     <button
-                      onClick={() => toggleVisible(show.id, show.visible)}
+                      onClick={() => toggleVisible(show)}
                       className={`text-xs px-3 py-1.5 rounded ${
                         show.visible
                           ? 'bg-green-900/30 text-green-400'

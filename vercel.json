@@ -1,4 +1,7 @@
 {
+  "crons": [
+    { "path": "/api/remind", "schedule": "0 14 * * *" }
+  ],
   "rewrites": [
     { "source": "/api/:path*", "destination": "/api/:path*" },
     { "source": "/(.*)", "destination": "/index.html" }

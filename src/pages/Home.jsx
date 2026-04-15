@@ -104,7 +104,7 @@ export default function Home() {
   const shift = (openPanel === 'music' || openPanel === 'news') ? 'lg:translate-x-[33.333%]' : 'translate-x-0'
 
   return (
-    <div className="h-screen overflow-y-auto lg:overflow-hidden relative">
+    <div className="h-screen overflow-y-auto scrollbar-hide lg:overflow-hidden relative">
       {/* Music panel — fixed left, always rendered */}
       <div className={`fixed top-0 left-0 h-full w-full lg:w-1/3 z-40 bg-bg transition-transform duration-300 ease-in-out ${
         openPanel === 'music' ? 'translate-x-0' : '-translate-x-full'

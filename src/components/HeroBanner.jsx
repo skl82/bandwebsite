@@ -1,4 +1,4 @@
-const heroImages = ['/hero.jpg', '/hero2.jpg', '/hero3.jpg', '/hero4.jpg', '/hero5.jpg', '/hero7.jpg', '/hero10.jpg', '/hero11.jpg', '/hero12.jpg']
+const heroImages = ['/hero.jpg', '/hero2.jpg', '/hero3.jpg', '/hero4.jpg', '/hero5.jpg', '/hero7.jpg', '/hero10.jpg', '/hero11.jpg', '/hero12.jpg', '/hero15.jpg', '/hero16.jpg']
 
 const last = sessionStorage.getItem('lastHero')
 const filtered = heroImages.filter((img) => img !== last)

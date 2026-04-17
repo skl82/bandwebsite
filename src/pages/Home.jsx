@@ -223,15 +223,15 @@ export default function Home() {
           <div className="hidden lg:flex absolute left-0 top-[13rem] bottom-[3rem] z-50 flex-col justify-center gap-[2vh] fade-in fade-in-delay-3">
             <button
               onClick={() => toggle('music')}
-              className="bg-bg pl-0 pr-3 py-4 font-mono tracking-tight writing-vertical cursor-pointer hover:bg-surface transition-colors leading-none"
-              style={{ fontSize: 'min(5.5rem, 7.15vh)' }}
+              className="bg-bg pl-[0.15em] pr-[0.2em] py-[0.25em] font-mono tracking-tight writing-vertical cursor-pointer hover:bg-surface transition-colors leading-none"
+              style={{ fontSize: 'min(5.5rem, calc((100vh - 22rem) / 10))' }}
             >
               {'\u00A0'}MUSIC{'\u00A0'}
             </button>
             <button
               onClick={() => toggle('news')}
-              className="bg-bg pl-0 pr-3 py-4 font-mono tracking-tight writing-vertical cursor-pointer hover:bg-surface transition-colors leading-none"
-              style={{ fontSize: 'min(5.5rem, 7.15vh)' }}
+              className="bg-bg pl-[0.15em] pr-[0.2em] py-[0.25em] font-mono tracking-tight writing-vertical cursor-pointer hover:bg-surface transition-colors leading-none"
+              style={{ fontSize: 'min(5.5rem, calc((100vh - 22rem) / 10))' }}
             >
               {'\u00A0'}NEWS{'\u00A0'}
             </button>

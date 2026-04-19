@@ -26,3 +26,12 @@ createRoot(document.getElementById('root')).render(
     </BrowserRouter>
   </StrictMode>,
 )
+
+const loaderDone = window.__araujiaLoaderDone || Promise.resolve()
+const loaderTimeout = new Promise((r) => setTimeout(r, 5000))
+Promise.race([loaderDone, loaderTimeout]).then(() => {
+  const el = document.getElementById('araujia-loader')
+  if (!el) return
+  el.classList.add('hidden')
+  setTimeout(() => { el.remove() }, 550)
+})

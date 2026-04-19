@@ -9,10 +9,11 @@ export default function NewsForm({ article, onSaved }) {
     link: article?.link || '',
     link_text: article?.link_text || '',
     image_fit: article?.image_fit || 'cover',
-    visible: article?.visible || false,
+    visible: article ? article.visible : true,
   })
   const [imageFile, setImageFile] = useState(null)
   const [imagePreview, setImagePreview] = useState(article?.image_url || null)
+  const [notifyList, setNotifyList] = useState(false)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState(null)
 
@@ -87,7 +88,7 @@ export default function NewsForm({ article, onSaved }) {
     }
 
     setSaving(false)
-    onSaved()
+    onSaved({ notify: notifyList, articleData: payload })
   }
 
   const inputCls = 'w-full bg-bg border border-white/10 rounded px-4 py-3 text-text text-sm focus:outline-none focus:border-accent'
@@ -182,6 +183,16 @@ export default function NewsForm({ article, onSaved }) {
           className="w-4 h-4 accent-accent"
         />
         <span className="text-sm">Visible (publish to site)</span>
+      </label>
+
+      <label className="flex items-center gap-3 cursor-pointer">
+        <input
+          type="checkbox"
+          checked={notifyList}
+          onChange={e => setNotifyList(e.target.checked)}
+          className="w-4 h-4 accent-accent"
+        />
+        <span className="text-sm">Notify mailing list <span className="text-text-muted text-xs">(unchecked by default — check to send a news email via Mailchimp when saving{article ? '' : ' this new story'})</span></span>
       </label>
 
       {error && <p className="text-accent text-sm">{error}</p>}

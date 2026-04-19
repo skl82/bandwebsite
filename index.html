@@ -86,22 +86,35 @@
         }
         var resolveDone;
         window.__araujiaLoaderDone=new Promise(function(r){resolveDone=r;});
+        function killLoader(){
+          var el=document.getElementById('araujia-loader');
+          if(!el) return;
+          el.classList.add('hidden');
+          setTimeout(function(){ if(el.parentNode) el.parentNode.removeChild(el); },550);
+        }
+        // Hard cap: even if React never mounts, loader removes itself.
+        setTimeout(function(){ resolveDone(); killLoader(); }, 8000);
         var seen=false;
         try{ seen=sessionStorage.getItem('araujia-booted')==='1'; }catch(e){}
         if(seen){
           var el=document.getElementById('araujia-loader');
-          if(el) el.remove();
+          if(el && el.parentNode) el.parentNode.removeChild(el);
           resolveDone();
         } else {
           async function run(){
-            var lines=document.querySelectorAll('#araujia-loader .line');
-            await sleep(200);
-            for(var i=1;i<=6;i++){ await runLine(lines[i]); }
-            var barline=document.getElementById('araujia-barline');
-            barline.style.opacity='1';
-            await animateBar();
-            try{ sessionStorage.setItem('araujia-booted','1'); }catch(e){}
-            resolveDone();
+            try {
+              var lines=document.querySelectorAll('#araujia-loader .line');
+              await sleep(200);
+              for(var i=1;i<=6;i++){ await runLine(lines[i]); }
+              var barline=document.getElementById('araujia-barline');
+              barline.style.opacity='1';
+              await animateBar();
+              try{ sessionStorage.setItem('araujia-booted','1'); }catch(e){}
+            } catch(err) {
+              console.error('[loader]', err);
+            } finally {
+              resolveDone();
+            }
           }
           if(document.readyState==='loading'){
             document.addEventListener('DOMContentLoaded',run);

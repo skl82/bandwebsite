@@ -122,6 +122,39 @@ export default function Admin() {
     }
   }
 
+  async function sendNewsNotification(articleData) {
+    try {
+      const { data: { session: s } } = await supabase.auth.getSession()
+      const res = await fetch('/api/notify-news', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${s?.access_token}`,
+        },
+        body: JSON.stringify({
+          title: articleData.title,
+          body: articleData.body,
+          image_url: articleData.image_url,
+          link: articleData.link,
+          link_text: articleData.link_text,
+        }),
+      })
+      if (!res.ok) throw new Error()
+      alert('News email sent!')
+    } catch {
+      alert('Failed to send news email. Try again.')
+    }
+  }
+
+  async function handleNewsSaved({ notify, articleData } = {}) {
+    setNewsForm(false)
+    setEditingNews(null)
+    fetchNews()
+    if (notify && articleData) {
+      await sendNewsNotification(articleData)
+    }
+  }
+
   async function deleteShow(id) {
     if (!window.confirm('Delete this show?')) return
     await supabase.from('shows').delete().eq('id', id)
@@ -283,7 +316,7 @@ export default function Admin() {
                   Cancel
                 </button>
               </div>
-              <NewsForm article={editingNews} onSaved={() => { setNewsForm(false); setEditingNews(null); fetchNews() }} />
+              <NewsForm article={editingNews} onSaved={handleNewsSaved} />
             </div>
           ) : (
             <button

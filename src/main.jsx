@@ -27,11 +27,8 @@ createRoot(document.getElementById('root')).render(
   </StrictMode>,
 )
 
-const windowLoaded = document.readyState === 'complete'
-  ? Promise.resolve()
-  : new Promise((r) => window.addEventListener('load', r, { once: true }))
-
-Promise.all([window.__araujiaLoaderDone, windowLoaded]).then(() => {
+const loaderTimeout = new Promise((r) => setTimeout(r, 5000))
+Promise.race([window.__araujiaLoaderDone, loaderTimeout]).then(() => {
   const el = document.getElementById('araujia-loader')
   if (!el) return
   el.classList.add('hidden')

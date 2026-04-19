@@ -9,7 +9,7 @@ export default function NewsForm({ article, onSaved }) {
     link: article?.link || '',
     link_text: article?.link_text || '',
     image_fit: article?.image_fit || 'cover',
-    visible: article?.visible || false,
+    visible: article ? article.visible : true,
   })
   const [imageFile, setImageFile] = useState(null)
   const [imagePreview, setImagePreview] = useState(article?.image_url || null)

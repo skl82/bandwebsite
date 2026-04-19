@@ -33,9 +33,14 @@
       #araujia-loader .pct{color:#888}
       #araujia-loader .cursor{display:inline-block;width:10px;height:18px;background:#e63946;vertical-align:-3px;animation:araujia-blink .8s steps(2) infinite;margin-left:4px}
       @keyframes araujia-blink{50%{opacity:0}}
-      #araujia-loader .line{opacity:0;animation:araujia-line-in .25s forwards}
+      #araujia-loader .line{opacity:0;animation:araujia-line-in .25s forwards;white-space:nowrap}
       @keyframes araujia-line-in{to{opacity:1}}
       #araujia-loader .line.boot{opacity:1;animation:none}
+      @media (max-width:640px){
+        #araujia-loader .term{padding:24px 20px;font-size:11px;line-height:1.9}
+        #araujia-loader .progress{font-size:13px;margin-top:14px}
+        #araujia-loader .cursor{width:7px;height:13px}
+      }
     </style>
   </head>
   <body>

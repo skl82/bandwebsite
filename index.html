@@ -12,12 +12,94 @@
     <meta property="og:description" content="Shows, music, and tickets." />
     <meta property="og:type" content="website" />
     <meta name="twitter:card" content="summary_large_image" />
+    <link rel="preload" as="image" href="/hero.jpg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <style>
+      #araujia-loader{position:fixed;inset:0;z-index:9999;background:#0a0a0a;color:#f1f1f1;display:flex;align-items:center;justify-content:flex-start;overflow:hidden;transition:opacity 500ms ease-out;font-family:'Space Mono',ui-monospace,monospace}
+      #araujia-loader.hidden{opacity:0;pointer-events:none}
+      #araujia-loader::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,1) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,1) 1px,transparent 1px);background-size:60px 60px;opacity:.05;pointer-events:none}
+      #araujia-loader::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 40%,rgba(0,0,0,.5) 100%);pointer-events:none}
+      #araujia-loader .scanlines{position:absolute;inset:0;z-index:1;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,255,0,.03) 2px,rgba(0,255,0,.03) 4px);pointer-events:none}
+      #araujia-loader .term{position:relative;z-index:2;padding:56px 64px;font-size:15px;line-height:2;letter-spacing:.05em;max-width:680px;width:100%}
+      #araujia-loader .muted{color:#888}
+      #araujia-loader .red{color:#e63946}
+      #araujia-loader .ok{color:#e63946;opacity:0;transition:opacity .15s}
+      #araujia-loader .ok.show{opacity:1}
+      #araujia-loader .dim{color:#5a5a5a}
+      #araujia-loader .dots{color:#e63946;white-space:pre}
+      #araujia-loader .progress{font-family:'Space Mono',ui-monospace,monospace;letter-spacing:0;font-size:17px;white-space:pre;margin-top:22px}
+      #araujia-loader .pct{color:#888}
+      #araujia-loader .cursor{display:inline-block;width:10px;height:18px;background:#e63946;vertical-align:-3px;animation:araujia-blink .8s steps(2) infinite;margin-left:4px}
+      @keyframes araujia-blink{50%{opacity:0}}
+      #araujia-loader .line{opacity:0;animation:araujia-line-in .25s forwards}
+      @keyframes araujia-line-in{to{opacity:1}}
+      #araujia-loader .line.boot{opacity:1;animation:none}
+    </style>
   </head>
   <body>
+    <div id="araujia-loader">
+      <div class="scanlines"></div>
+      <div class="term">
+        <div class="line boot"><span class="muted">$</span> <span class="red">./araujia</span> <span class="dim">--boot --live</span></div>
+        <div class="line" data-label="&gt; loading hero.jpg" data-dots="8"><span class="muted"></span> <span class="dots"></span> <span class="ok">ok</span></div>
+        <div class="line" data-label="&gt; fetching shows" data-dots="9"><span class="muted"></span> <span class="dots"></span> <span class="ok">ok</span></div>
+        <div class="line" data-label="&gt; starting scroll bars" data-dots="5"><span class="muted"></span> <span class="dots"></span> <span class="ok">ok</span></div>
+        <div class="line" data-label="&gt; plugging in pedalboards" data-dots="1"><span class="muted"></span> <span class="dots"></span> <span class="ok">ok</span></div>
+        <div class="line" data-label="&gt; switching on amps" data-dots="7"><span class="muted"></span> <span class="dots"></span> <span class="ok">ok</span></div>
+        <div class="line" data-label="&gt; starting the music" data-dots="6"><span class="muted"></span> <span class="dots"></span> <span class="ok">ok</span></div>
+        <div class="line" id="araujia-barline" style="opacity:0">
+          <div class="progress"><span class="red" id="araujia-bar">[░░░░░░░░░░░░░░░░░░]</span> <span class="pct" id="araujia-pct">0%</span><span class="cursor"></span></div>
+        </div>
+      </div>
+    </div>
     <div id="root"></div>
+    <script>
+      (function(){
+        var TYPE_MS=9, DOT_MS=21, LINE_PAUSE=33, BAR_MS=770, BAR_LEN=18;
+        var sleep=function(ms){return new Promise(function(r){setTimeout(r,ms);});};
+        var decode=function(s){var t=document.createElement('textarea');t.innerHTML=s;return t.value;};
+        async function runLine(el){
+          el.style.opacity='1';
+          var label=el.querySelector('.muted'), dots=el.querySelector('.dots'), ok=el.querySelector('.ok');
+          var text=decode(el.dataset.label);
+          for(var i=1;i<=text.length;i++){label.textContent=text.slice(0,i);await sleep(TYPE_MS);}
+          var n=parseInt(el.dataset.dots,10);
+          for(var j=1;j<=n;j++){dots.textContent='.'.repeat(j);await sleep(DOT_MS);}
+          ok.classList.add('show');
+          await sleep(LINE_PAUSE);
+        }
+        function animateBar(){
+          return new Promise(function(resolve){
+            var bar=document.getElementById('araujia-bar'), pct=document.getElementById('araujia-pct');
+            var start=performance.now();
+            function tick(t){
+              var p=Math.min(1,(t-start)/BAR_MS);
+              var filled=Math.floor(p*BAR_LEN);
+              bar.textContent='['+'█'.repeat(filled)+'░'.repeat(BAR_LEN-filled)+']';
+              pct.textContent=Math.floor(p*100)+'%';
+              if(p<1) requestAnimationFrame(tick); else resolve();
+            }
+            requestAnimationFrame(tick);
+          });
+        }
+        var resolveDone;
+        window.__araujiaLoaderDone=new Promise(function(r){resolveDone=r;});
+        async function run(){
+          var lines=document.querySelectorAll('#araujia-loader .line');
+          await sleep(200);
+          for(var i=1;i<=6;i++){ await runLine(lines[i]); }
+          var barline=document.getElementById('araujia-barline');
+          barline.style.opacity='1';
+          await animateBar();
+          resolveDone();
+        }
+        if(document.readyState==='loading'){
+          document.addEventListener('DOMContentLoaded',run);
+        } else { run(); }
+      })();
+    </script>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

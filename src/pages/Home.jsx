@@ -19,7 +19,14 @@ export default function Home() {
   const dragStart = useRef({ x: 0, y: 0 })
   const logoRef = useRef(null)
   const bucketRef = useRef(null)
+  const musicScrollRef = useRef(null)
+  const newsScrollRef = useRef(null)
   const navigate = useNavigate()
+
+  useEffect(() => {
+    if (openPanel !== 'music' && musicScrollRef.current) musicScrollRef.current.scrollTop = 0
+    if (openPanel !== 'news' && newsScrollRef.current) newsScrollRef.current.scrollTop = 0
+  }, [openPanel])
 
   function toggle(panel) {
     setOpenPanel(prev => (prev === panel ? null : panel))
@@ -109,7 +116,7 @@ export default function Home() {
       <div className={`fixed top-0 left-0 h-full w-full lg:w-1/3 z-40 bg-bg transition-transform duration-300 ease-in-out ${
         openPanel === 'music' ? 'translate-x-0' : '-translate-x-full'
       }`}>
-        <div className="h-full overflow-y-auto px-4 py-4 lg:px-6 lg:py-8">
+        <div ref={musicScrollRef} className="h-full overflow-y-auto px-4 py-4 lg:px-6 lg:py-8">
           <div className="flex items-center justify-between mb-6">
             <h2 className="font-mono text-xl tracking-widest uppercase">// Music</h2>
             <button
@@ -127,7 +134,7 @@ export default function Home() {
       <div className={`fixed top-0 left-0 h-full w-full lg:w-1/3 z-40 bg-bg transition-transform duration-300 ease-in-out ${
         openPanel === 'news' ? 'translate-x-0' : '-translate-x-full'
       }`}>
-        <div className="h-full overflow-y-auto px-4 py-4 lg:px-6 lg:py-8 scrollbar-hide">
+        <div ref={newsScrollRef} className="h-full overflow-y-auto px-4 py-4 lg:px-6 lg:py-8 scrollbar-hide">
           <div className="flex items-center justify-between mb-6">
             <h2 className="font-mono text-xl tracking-widest uppercase">// News</h2>
             <button

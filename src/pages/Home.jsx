@@ -24,8 +24,11 @@ export default function Home() {
   const navigate = useNavigate()
 
   useEffect(() => {
-    if (openPanel !== 'music' && musicScrollRef.current) musicScrollRef.current.scrollTop = 0
-    if (openPanel !== 'news' && newsScrollRef.current) newsScrollRef.current.scrollTop = 0
+    const t = setTimeout(() => {
+      if (openPanel !== 'music' && musicScrollRef.current) musicScrollRef.current.scrollTop = 0
+      if (openPanel !== 'news' && newsScrollRef.current) newsScrollRef.current.scrollTop = 0
+    }, 300)
+    return () => clearTimeout(t)
   }, [openPanel])
 
   function toggle(panel) {

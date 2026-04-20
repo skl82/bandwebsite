@@ -1,10 +1,12 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useLayoutEffect } from 'react'
 import { supabase } from '../supabase'
 
 const SPEED = 60
 
 export default function NextShowTicker() {
-  const [text, setText] = useState(null)
+  const [text, setText] = useState('CHECK BACK SOON FOR SHOW DETAILS')
+  const [copies, setCopies] = useState(4)
+  const containerRef = useRef(null)
   const trackRef = useRef(null)
   const offsetRef = useRef(0)
   const rafRef = useRef(null)
@@ -32,6 +34,26 @@ export default function NextShowTicker() {
       })
   }, [])
 
+  useLayoutEffect(() => {
+    const container = containerRef.current
+    const track = trackRef.current
+    if (!container || !track) return
+
+    function recompute() {
+      const containerWidth = container.offsetWidth
+      if (!containerWidth) return
+      const singleWidth = track.scrollWidth / copies
+      if (!singleWidth) return
+      const needed = Math.max(4, Math.ceil((containerWidth * 2) / singleWidth) + 1)
+      if (needed !== copies) setCopies(needed)
+    }
+
+    recompute()
+    const ro = new ResizeObserver(recompute)
+    ro.observe(container)
+    return () => ro.disconnect()
+  }, [text, copies])
+
   useEffect(() => {
     const track = trackRef.current
     if (!track || !text) return
@@ -43,8 +65,8 @@ export default function NextShowTicker() {
 
       offsetRef.current -= SPEED * dt
 
-      const copyWidth = track.scrollWidth / 4
-      if (Math.abs(offsetRef.current) >= copyWidth) {
+      const copyWidth = track.scrollWidth / copies
+      if (copyWidth && Math.abs(offsetRef.current) >= copyWidth) {
         offsetRef.current += copyWidth
       }
 
@@ -53,15 +75,16 @@ export default function NextShowTicker() {
     }
 
     rafRef.current = requestAnimationFrame(tick)
-    return () => cancelAnimationFrame(rafRef.current)
-  }, [text])
+    return () => {
+      cancelAnimationFrame(rafRef.current)
+      lastRef.current = null
+    }
+  }, [text, copies])
 
-  if (!text) return null
-
-  const items = [text, text, text, text]
+  const items = Array.from({ length: copies }, () => text)
 
   return (
-    <div className="relative overflow-hidden bg-accent carousel-glitch-wrap-offset">
+    <div ref={containerRef} className="relative overflow-hidden bg-accent carousel-glitch-wrap-offset">
       <div ref={trackRef} className="flex whitespace-nowrap will-change-transform">
         {items.map((t, i) => (
           <span key={i} className="inline-flex items-center font-mono text-sm tracking-widest uppercase text-white py-2">

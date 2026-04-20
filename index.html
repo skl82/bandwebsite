@@ -62,7 +62,7 @@
     <div id="root"></div>
     <script>
       (function(){
-        var TYPE_MS=9, DOT_MS=21, LINE_PAUSE=33, BAR_MS=770, BAR_LEN=18;
+        var TYPE_MS=5, DOT_MS=11, LINE_PAUSE=16, BAR_MS=420, BAR_LEN=18;
         var sleep=function(ms){return new Promise(function(r){setTimeout(r,ms);});};
         var decode=function(s){var t=document.createElement('textarea');t.innerHTML=s;return t.value;};
         async function runLine(el){
@@ -109,7 +109,7 @@
           async function run(){
             try {
               var lines=document.querySelectorAll('#araujia-loader .line');
-              await sleep(200);
+              await sleep(80);
               for(var i=1;i<=6;i++){ await runLine(lines[i]); }
               var barline=document.getElementById('araujia-barline');
               barline.style.opacity='1';

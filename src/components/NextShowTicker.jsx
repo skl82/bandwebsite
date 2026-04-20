@@ -4,7 +4,7 @@ import { supabase } from '../supabase'
 const SPEED = 60
 
 export default function NextShowTicker() {
-  const [text, setText] = useState('CHECK BACK SOON FOR SHOW DETAILS')
+  const [text, setText] = useState('ARAUJIA')
   const [copies, setCopies] = useState(4)
   const containerRef = useRef(null)
   const trackRef = useRef(null)

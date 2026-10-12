@@ -145,7 +145,7 @@ export default async function handler(req, res) {
       type: 'regular',
       recipients: { list_id: audienceId },
       settings: {
-        subject_line: `${safeGigName} — ${formatted}`,
+        subject_line: `${gig_name} — ${formatted}`,
         from_name: 'ARAUJIA',
         reply_to: fromEmail,
       },

@@ -160,7 +160,7 @@ export default async function handler(req, res) {
         type: 'regular',
         recipients: { list_id: audienceId },
         settings: {
-          subject_line: `Coming soon: ${safeGigName} — ${formatted}`,
+          subject_line: `Coming soon: ${show.gig_name} — ${formatted}`,
           from_name: 'ARAUJIA',
           reply_to: fromEmail,
         },

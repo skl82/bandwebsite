@@ -123,7 +123,7 @@ export default async function handler(req, res) {
       type: 'regular',
       recipients: { list_id: audienceId },
       settings: {
-        subject_line: safeTitle,
+        subject_line: title,
         from_name: 'ARAUJIA',
         reply_to: fromEmail,
       },

@@ -16,7 +16,11 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' })
   }
 
-  // Verify cron secret
+  // Verify cron secret. Fail closed if it's unset, so a missing env var can't
+  // let a request with no Authorization header through.
+  if (!process.env.CRON_SECRET) {
+    return res.status(500).json({ error: 'Server misconfigured' })
+  }
   const token = req.headers.authorization?.replace('Bearer ', '')
   if (token !== process.env.CRON_SECRET) {
     return res.status(401).json({ error: 'Unauthorized' })

@@ -1,10 +1,11 @@
 import { useState } from 'react'
 import { supabase } from '../supabase'
+import { localToday } from '../lib/dates'
 
 export default function NewsForm({ article, onSaved }) {
   const [form, setForm] = useState({
     title: article?.title || '',
-    date: article?.date || new Date().toISOString().split('T')[0],
+    date: article?.date || localToday(),
     body: article?.body || '',
     link: article?.link || '',
     link_text: article?.link_text || '',

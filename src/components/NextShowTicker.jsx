@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useLayoutEffect } from 'react'
 import { supabase } from '../supabase'
+import { upcomingCutoffDate } from '../lib/dates'
 
 const SPEED = 60
 
@@ -13,7 +14,7 @@ export default function NextShowTicker() {
   const lastRef = useRef(null)
 
   useEffect(() => {
-    const today = new Date().toISOString().split('T')[0]
+    const today = upcomingCutoffDate()
     supabase
       .from('shows')
       .select('*')

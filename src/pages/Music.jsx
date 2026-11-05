@@ -2,12 +2,13 @@ import { useState, useEffect } from 'react'
 import { supabase } from '../supabase'
 import SpotifyEmbed from '../components/SpotifyEmbed'
 import TicketButton from '../components/TicketButton'
+import { upcomingCutoffDate } from '../lib/dates'
 
 export default function Music() {
   const [nextShow, setNextShow] = useState(null)
 
   useEffect(() => {
-    const today = new Date().toISOString().split('T')[0]
+    const today = upcomingCutoffDate()
     supabase
       .from('shows')
       .select('*')

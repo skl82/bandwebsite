@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '../supabase'
 import ShowCard from '../components/ShowCard'
+import { upcomingCutoffDate } from '../lib/dates'
 
 export default function Shows() {
   const [upcoming, setUpcoming] = useState([])
@@ -15,7 +16,7 @@ export default function Shows() {
       .order('date', { ascending: true })
       .then(({ data }) => {
         if (!data) return
-        const today = new Date().toISOString().split('T')[0]
+        const today = upcomingCutoffDate()
         setUpcoming(data.filter(s => s.date >= today))
         setPast(data.filter(s => s.date < today).reverse())
       })

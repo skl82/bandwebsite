@@ -238,13 +238,14 @@ export default function Home() {
           )}
 
           {/* Side tabs — flex column between logo and social bar */}
-          <div className="hidden lg:flex absolute left-0 top-[13rem] bottom-[3rem] z-50 flex-col justify-center gap-[2vh] fade-in fade-in-delay-3">
+          <div className="hidden lg:flex absolute left-0 top-[13rem] bottom-[5.5rem] z-50 flex-col justify-center gap-[2vh] fade-in fade-in-delay-3">
             {SIDE_TABS.map(tab => (
               <button
                 key={tab.id}
                 onClick={() => toggle(tab.id)}
                 className="bg-bg pl-[0.15em] pr-[0.2em] py-[0.25em] font-mono tracking-tight writing-vertical cursor-pointer hover:bg-surface transition-colors leading-none"
-                style={{ fontSize: 'min(5.5rem, calc((100vh - 22rem) / 12))' }}
+                // Sized so the three tabs fit the column (logo → "find us on" label) with ~25px to spare at any height
+                style={{ fontSize: 'min(5.5rem, calc((100vh - 21rem) / 11))' }}
               >
                 {'\u00A0'}{tab.label}{'\u00A0'}
               </button>

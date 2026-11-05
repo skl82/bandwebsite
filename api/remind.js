@@ -67,6 +67,22 @@ export default async function handler(req, res) {
   const results = []
 
   for (const show of shows) {
+    // Claim the show before emailing anyone. Only one run can flip reminder_sent from false to
+    // true, so a duplicate cron invocation (or a retry) can't send the list a second email.
+    const { data: claimed, error: claimError } = await supabase
+      .from('shows')
+      .update({ reminder_sent: true })
+      .eq('id', show.id)
+      .eq('reminder_sent', false)
+      .select('id')
+
+    if (claimError || !claimed?.length) {
+      results.push({ id: show.id, gig_name: show.gig_name, status: claimError ? 'failed' : 'skipped' })
+      continue
+    }
+
+    let campaignId = null
+    let sendAttempted = false
     try {
       const formatted = new Date(show.date + 'T00:00:00').toLocaleDateString('en-US', {
         weekday: 'long',
@@ -169,20 +185,26 @@ export default async function handler(req, res) {
           reply_to: fromEmail,
         },
       })
+      campaignId = campaign.id
 
       await mailchimp.campaigns.setContent(campaign.id, { html })
+      sendAttempted = true
       await mailchimp.campaigns.send(campaign.id)
-
-      // Mark reminder as sent
-      await supabase
-        .from('shows')
-        .update({ reminder_sent: true })
-        .eq('id', show.id)
 
       results.push({ id: show.id, gig_name: show.gig_name, status: 'sent' })
     } catch (err) {
       console.error(`Reminder failed for ${show.gig_name}:`, err?.response?.body || err.message)
-      results.push({ id: show.id, gig_name: show.gig_name, status: 'failed' })
+
+      if (sendAttempted) {
+        // The send call itself errored, but Mailchimp may still have sent it (e.g. a timeout).
+        // Keep the show claimed: a missed reminder is better than emailing the list twice.
+        results.push({ id: show.id, gig_name: show.gig_name, status: 'send-uncertain' })
+      } else {
+        // Nothing went out: release the claim so tomorrow's run retries, and drop the draft.
+        await supabase.from('shows').update({ reminder_sent: false }).eq('id', show.id)
+        if (campaignId) await mailchimp.campaigns.remove(campaignId).catch(() => {})
+        results.push({ id: show.id, gig_name: show.gig_name, status: 'failed' })
+      }
     }
   }
 

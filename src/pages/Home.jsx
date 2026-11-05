@@ -7,6 +7,45 @@ import SocialLinks from '../components/SocialLinks'
 import NextShowTicker from '../components/NextShowTicker'
 import MailchimpSignup from '../components/MailchimpSignup'
 import NewsPanel from '../components/NewsPanel'
+import BioPanel from '../components/BioPanel'
+
+const SIDE_TABS = [
+  { id: 'music', label: 'MUSIC' },
+  { id: 'news', label: 'NEWS' },
+  { id: 'bio', label: 'BIO' },
+]
+
+// Left slide-in panel. Resets its scroll position once it has slid closed.
+function SlidePanel({ open, title, onClose, children }) {
+  const scrollRef = useRef(null)
+
+  useEffect(() => {
+    if (open) return
+    const t = setTimeout(() => {
+      if (scrollRef.current) scrollRef.current.scrollTop = 0
+    }, 300)
+    return () => clearTimeout(t)
+  }, [open])
+
+  return (
+    <div className={`fixed top-0 left-0 h-full w-full lg:w-1/3 z-40 bg-bg transition-transform duration-300 ease-in-out ${
+      open ? 'translate-x-0' : '-translate-x-full'
+    }`}>
+      <div ref={scrollRef} className="h-full overflow-y-auto px-4 py-4 lg:px-6 lg:py-8 scrollbar-hide">
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="font-mono text-xl tracking-widest uppercase">// {title}</h2>
+          <button
+            onClick={onClose}
+            className="font-mono text-text-muted hover:text-text text-sm leading-none cursor-pointer"
+          >
+            [close]
+          </button>
+        </div>
+        {children}
+      </div>
+    </div>
+  )
+}
 
 export default function Home() {
   const [openPanel, setOpenPanel] = useState(null)
@@ -19,17 +58,7 @@ export default function Home() {
   const dragStart = useRef({ x: 0, y: 0 })
   const logoRef = useRef(null)
   const bucketRef = useRef(null)
-  const musicScrollRef = useRef(null)
-  const newsScrollRef = useRef(null)
   const navigate = useNavigate()
-
-  useEffect(() => {
-    const t = setTimeout(() => {
-      if (openPanel !== 'music' && musicScrollRef.current) musicScrollRef.current.scrollTop = 0
-      if (openPanel !== 'news' && newsScrollRef.current) newsScrollRef.current.scrollTop = 0
-    }, 300)
-    return () => clearTimeout(t)
-  }, [openPanel])
 
   function toggle(panel) {
     setOpenPanel(prev => (prev === panel ? null : panel))
@@ -110,52 +139,31 @@ export default function Home() {
     window.addEventListener('pointerup', onUp)
   }
 
-  // Shift the main content when music panel opens (desktop only)
-  const shift = (openPanel === 'music' || openPanel === 'news') ? 'lg:translate-x-[33.333%]' : 'translate-x-0'
+  // Every panel slides in from the left, so any open panel shifts the page right (desktop only)
+  const leftOpen = openPanel !== null
+  const shift = leftOpen ? 'lg:translate-x-[33.333%]' : 'translate-x-0'
 
   return (
-    <div className="h-screen overflow-y-auto scrollbar-hide lg:overflow-hidden relative">
-      {/* Music panel — fixed left, always rendered */}
-      <div className={`fixed top-0 left-0 h-full w-full lg:w-1/3 z-40 bg-bg transition-transform duration-300 ease-in-out ${
-        openPanel === 'music' ? 'translate-x-0' : '-translate-x-full'
-      }`}>
-        <div ref={musicScrollRef} className="h-full overflow-y-auto px-4 py-4 lg:px-6 lg:py-8">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="font-mono text-xl tracking-widest uppercase">// Music</h2>
-            <button
-              onClick={() => setOpenPanel(null)}
-              className="font-mono text-text-muted hover:text-text text-sm leading-none cursor-pointer"
-            >
-              [close]
-            </button>
-          </div>
-          <SpotifyEmbed height={352} />
-        </div>
-      </div>
-
-      {/* News panel — fixed left, slides in like music */}
-      <div className={`fixed top-0 left-0 h-full w-full lg:w-1/3 z-40 bg-bg transition-transform duration-300 ease-in-out ${
-        openPanel === 'news' ? 'translate-x-0' : '-translate-x-full'
-      }`}>
-        <div ref={newsScrollRef} className="h-full overflow-y-auto px-4 py-4 lg:px-6 lg:py-8 scrollbar-hide">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="font-mono text-xl tracking-widest uppercase">// News</h2>
-            <button
-              onClick={() => setOpenPanel(null)}
-              className="font-mono text-text-muted hover:text-text text-sm leading-none cursor-pointer"
-            >
-              [close]
-            </button>
-          </div>
-          <NewsPanel />
-        </div>
-      </div>
+    // Mobile: dvh so the page never outgrows the visible viewport (100vh ignores the
+    // browser toolbar and lets the document scroll underneath); overflow-x-hidden because
+    // the tickers' glitch skew briefly pokes ~2px past the edge and enables side-scrolling.
+    <div className="h-dvh lg:h-screen overflow-y-auto overflow-x-hidden overscroll-contain scrollbar-hide lg:overflow-hidden relative">
+      {/* Left slide-in panels — always rendered */}
+      <SlidePanel open={openPanel === 'music'} title="Music" onClose={() => setOpenPanel(null)}>
+        <SpotifyEmbed height={352} />
+      </SlidePanel>
+      <SlidePanel open={openPanel === 'news'} title="News" onClose={() => setOpenPanel(null)}>
+        <NewsPanel />
+      </SlidePanel>
+      <SlidePanel open={openPanel === 'bio'} title="Bio" onClose={() => setOpenPanel(null)}>
+        <BioPanel />
+      </SlidePanel>
 
       {/* Desktop carousels — fixed, above shows panel, shift with music */}
-      <div className={`hidden lg:block fixed top-0 left-0 right-0 z-50 fade-in-flat transition-transform duration-300 ease-in-out ${(openPanel === 'music' || openPanel === 'news') ? 'translate-x-[33.333%]' : 'translate-x-0'}`}>
+      <div className={`hidden lg:block fixed top-0 left-0 right-0 z-50 fade-in-flat transition-transform duration-300 ease-in-out ${leftOpen ? 'translate-x-[33.333%]' : 'translate-x-0'}`}>
         <NextShowTicker />
       </div>
-      <div className={`hidden lg:block fixed bottom-0 left-0 right-0 z-50 fade-in-flat transition-transform duration-300 ease-in-out ${(openPanel === 'music' || openPanel === 'news') ? 'translate-x-[33.333%]' : 'translate-x-0'}`}>
+      <div className={`hidden lg:block fixed bottom-0 left-0 right-0 z-50 fade-in-flat transition-transform duration-300 ease-in-out ${leftOpen ? 'translate-x-[33.333%]' : 'translate-x-0'}`}>
         <SocialLinks />
       </div>
 
@@ -229,22 +237,18 @@ export default function Home() {
             </div>
           )}
 
-          {/* Side tabs — MUSIC & NEWS, flex column between logo and social bar */}
+          {/* Side tabs — flex column between logo and social bar */}
           <div className="hidden lg:flex absolute left-0 top-[13rem] bottom-[3rem] z-50 flex-col justify-center gap-[2vh] fade-in fade-in-delay-3">
-            <button
-              onClick={() => toggle('music')}
-              className="bg-bg pl-[0.15em] pr-[0.2em] py-[0.25em] font-mono tracking-tight writing-vertical cursor-pointer hover:bg-surface transition-colors leading-none"
-              style={{ fontSize: 'min(5.5rem, calc((100vh - 22rem) / 10))' }}
-            >
-              {'\u00A0'}MUSIC{'\u00A0'}
-            </button>
-            <button
-              onClick={() => toggle('news')}
-              className="bg-bg pl-[0.15em] pr-[0.2em] py-[0.25em] font-mono tracking-tight writing-vertical cursor-pointer hover:bg-surface transition-colors leading-none"
-              style={{ fontSize: 'min(5.5rem, calc((100vh - 22rem) / 10))' }}
-            >
-              {'\u00A0'}NEWS{'\u00A0'}
-            </button>
+            {SIDE_TABS.map(tab => (
+              <button
+                key={tab.id}
+                onClick={() => toggle(tab.id)}
+                className="bg-bg pl-[0.15em] pr-[0.2em] py-[0.25em] font-mono tracking-tight writing-vertical cursor-pointer hover:bg-surface transition-colors leading-none"
+                style={{ fontSize: 'min(5.5rem, calc((100vh - 22rem) / 12))' }}
+              >
+                {'\u00A0'}{tab.label}{'\u00A0'}
+              </button>
+            ))}
           </div>
 
           {/* Social links — desktop: bottom */}
@@ -256,7 +260,7 @@ export default function Home() {
           lg:fixed lg:top-14 lg:bottom-14 lg:right-4 lg:h-auto lg:w-1/3 lg:z-40 lg:bg-bg lg:backdrop-blur-none lg:border-0 lg:rounded-none lg:m-0 lg:p-0
           lg:transition-transform lg:duration-300 lg:ease-in-out
           fade-in fade-in-delay-3
-          ${(openPanel === 'music' || openPanel === 'news') ? 'lg:translate-x-full' : 'lg:translate-x-0'}
+          ${leftOpen ? 'lg:translate-x-full' : 'lg:translate-x-0'}
         `}>
           <div className="lg:relative lg:h-full lg:flex lg:flex-col">
             <div className="hidden lg:block lg:px-6 lg:pt-4 lg:pb-2 bg-bg relative z-10">
@@ -285,6 +289,12 @@ export default function Home() {
         <div className="lg:hidden relative mx-4 mt-6 rounded-lg bg-bg/95 backdrop-blur-sm border border-white/10 p-4 z-10 fade-in fade-in-delay-5">
           <h2 className="font-mono text-xl tracking-widest uppercase mb-4">// News</h2>
           <NewsPanel mobileLimit />
+        </div>
+
+        {/* Bio tile — mobile only, below news */}
+        <div className="lg:hidden relative mx-4 mt-6 rounded-lg bg-bg/95 backdrop-blur-sm border border-white/10 p-4 z-10 fade-in fade-in-delay-5">
+          <h2 className="font-mono text-xl tracking-widest uppercase mb-4">// Bio</h2>
+          <BioPanel mobileLimit />
         </div>
 
         {/* Black backdrop below tiles — mobile only */}

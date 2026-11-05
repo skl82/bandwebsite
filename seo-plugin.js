@@ -111,7 +111,16 @@ ${links}
 `
 }
 
+// Escaping keeps link text and quotes from breaking the HTML, but can't stop a dangerous scheme
+// like `javascript:`. Fail the build if any link in band.js isn't a plain https:// URL.
+function assertHttpsLinks() {
+  const hrefs = [...LINKS.map((l) => l.href), ...BIO.flat().filter((p) => p.href).map((p) => p.href)]
+  const bad = hrefs.filter((href) => !href.startsWith('https://'))
+  if (bad.length) throw new Error(`band.js links must start with https:// — got: ${bad.join(', ')}`)
+}
+
 export default function seoPlugin() {
+  assertHttpsLinks()
   return {
     name: 'araujia-seo',
     transformIndexHtml(html) {

@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '../supabase'
 import { safeHref } from '../lib/url'
+import { upcomingCutoffDate } from '../lib/dates'
 
 export default function Links() {
   const [nextShow, setNextShow] = useState(null)
 
   useEffect(() => {
-    const today = new Date().toISOString().split('T')[0]
+    const today = upcomingCutoffDate()
     supabase
       .from('shows')
       .select('*')

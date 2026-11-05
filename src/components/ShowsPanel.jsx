@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '../supabase'
 import TicketButton from './TicketButton'
+import { upcomingCutoffDate } from '../lib/dates'
 
 export default function ShowsPanel() {
   const [shows, setShows] = useState([])
 
   useEffect(() => {
-    const today = new Date().toISOString().split('T')[0]
+    const today = upcomingCutoffDate()
     supabase
       .from('shows')
       .select('*')

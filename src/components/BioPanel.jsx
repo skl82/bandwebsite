@@ -14,6 +14,14 @@ export default function BioPanel({ mobileLimit = false }) {
 
   return (
     <div className="space-y-4">
+      <img
+        src="/bio.webp"
+        alt="ARAUJIA performing live. From left: David Yang (drums), Jonathan Briggs (bass), Sebastian Larsen (lead guitar), and Andres Alfonso (vocals, rhythm guitar)"
+        width={1000}
+        height={1000}
+        loading="lazy"
+        className="w-full h-auto border border-white/10"
+      />
       {visible.map((text, i) => (
         <p key={i} className="text-sm lg:text-[0.95rem] text-text/85 leading-relaxed">
           {text}

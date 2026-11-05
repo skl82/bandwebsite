@@ -1,0 +1,6 @@
+# All crawlers, AI crawlers included, are welcome everywhere except the admin pages.
+User-agent: *
+Disallow: /admin
+Disallow: /login
+
+Sitemap: https://araujiaband.com/sitemap.xml

@@ -1,9 +1,12 @@
 import { useRef, useEffect } from 'react'
+import { LINKS } from '../content/band'
+
+const hrefFor = (name) => LINKS.find((link) => link.name === name).href
 
 const platforms = [
   {
     name: 'Spotify',
-    href: 'https://open.spotify.com/artist/7jjxND0ZjxZsOEEX6pWr7A',
+    href: hrefFor('Spotify'),
     color: '#1DB954',
     icon: (
       <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
@@ -13,7 +16,7 @@ const platforms = [
   },
   {
     name: 'Apple Music',
-    href: 'https://music.apple.com/us/artist/araujia/1553193509',
+    href: hrefFor('Apple Music'),
     color: '#FA2D48',
     icon: (
       <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
@@ -23,7 +26,7 @@ const platforms = [
   },
   {
     name: 'Bandcamp',
-    href: 'https://araujia.bandcamp.com/music',
+    href: hrefFor('Bandcamp'),
     color: '#1DA0C3',
     icon: (
       <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
@@ -33,7 +36,7 @@ const platforms = [
   },
   {
     name: 'Instagram',
-    href: 'https://www.instagram.com/_araujia_/?hl=en',
+    href: hrefFor('Instagram'),
     color: '#E4405F',
     icon: (
       <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
@@ -43,7 +46,7 @@ const platforms = [
   },
   {
     name: 'YouTube',
-    href: 'https://www.youtube.com/@ARAUJIA/featured',
+    href: hrefFor('YouTube'),
     color: '#FF0000',
     icon: (
       <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
@@ -53,7 +56,7 @@ const platforms = [
   },
   {
     name: 'TikTok',
-    href: 'https://www.tiktok.com/@araujiaofficial?lang=en',
+    href: hrefFor('TikTok'),
     color: '#ffffff',
     icon: (
       <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">

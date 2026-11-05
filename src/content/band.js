@@ -49,9 +49,9 @@ export const BIO = [
     'Live, an ARAUJIA set swings from metal solos and outright shred to ambient passages and noise breaks within a single song. Since forming as a full band three years ago, ARAUJIA has become a staple of the local DC scene, working its way from basement shows to headlining slots across iconic DC venues such as DC9, The Pocket, and Songbyrd, and appearing on bills at Pie Shop, Jammin Java, The Renegade, and Transmission. Outside DC, the band has toured the east coast and performed at Manhattan’s Nightclub 101, The Lilypad in Cambridge, and DIY spaces including Baltimore’s Lwnsphere and Charlottesville’s Ginkgo Bookshop.',
   ],
   [
-    'The name ARAUJIA (ar-RAW-uh-jee-uh) is rooted in founder, lead vocalist, and rhythm guitarist Andres Alfonso’s heritage. While researching his mother’s Salvadoran family tree, Alfonso came across ',
+    'The name ARAUJIA (ar-RAW-uh-jee-uh) is rooted in founder, lead vocalist, and rhythm guitarist Andres Alfonso’s Salvadoran heritage and ',
     { em: 'Araujia sericifera' },
-    ', the “cruel moth vine,” named after a man who shared his family’s surname. The project began in 2021 as Alfonso’s bedroom recordings, including a run of demos, singles, and the EP ',
+    ', the “cruel moth vine.” The project began in 2021 as Alfonso’s bedroom recordings, including a run of demos, singles, and the EP ',
     { em: 'Fermenting Dread' },
     ', before growing into the current lineup of Alfonso, lead guitarist Sebastian Larsen, bassist Jonathan Briggs, and drummer David Yang. The 2025 EP ',
     { em: 'desire machine' },
